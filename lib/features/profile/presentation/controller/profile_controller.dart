@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../config/api/api_end_point.dart';
-import '../../../../config/route/app_routes.dart';
-import '../../../../services/api/api_client.dart';
-import '../../../../services/api/api_service.dart';
-import '../../../../services/api/multipart_helper.dart';
-import '../../../../services/storage/storage_services.dart';
-import '../../../../utils/app_snackbar.dart';
-import '../../../../utils/helpers/other_helper.dart';
+import 'package:home_to_school/config/api/api_end_point.dart';
+import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/services/api/api_client.dart';
+import 'package:home_to_school/services/api/api_service.dart';
+import 'package:home_to_school/services/api/multipart_helper.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
+import 'package:home_to_school/utils/app_snackbar.dart';
+import 'package:home_to_school/utils/helpers/other_helper.dart';
 
 class ProfileController extends GetxController {
   /// Language list
@@ -44,7 +44,18 @@ class ProfileController extends GetxController {
 
   /// Update profile
   Future<void> editProfileRepo() async {
-    if (LocalStorage.token.isEmpty) return;
+    if (LocalStorage.token.isEmpty) {
+      final name = nameController.text.trim();
+      if (name.isNotEmpty) {
+        LocalStorage.myName = name;
+      }
+      Get.back();
+      AppSnackbar.success(
+        title: 'Success',
+        message: 'Profile updated successfully',
+      );
+      return;
+    }
 
     try {
       _setLoading(true);
@@ -69,8 +80,10 @@ class ProfileController extends GetxController {
       }
 
       final Map<String, dynamic> data = response.data['data'] ?? {};
-
-      //LocalStorage.saveUser(data['user']);
+      if (data['user'] != null && data['user'] is Map) {
+        final userMap = data['user'] as Map<String, dynamic>;
+        LocalStorage.myName = userMap['fullName'] ?? nameController.text.trim();
+      }
 
       AppSnackbar.success(
         title: 'Success',

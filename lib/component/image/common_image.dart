@@ -41,12 +41,25 @@ class CommonImage extends StatelessWidget {
   }
 
   Widget _buildErrorWidget() {
-    return Image.asset(defaultImage);
+    return Container(
+      height: size?.sp ?? height?.h,
+      width: size?.sp ?? width?.w,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(borderRadius.r),
+      ),
+      child: Icon(
+        Icons.image_outlined,
+        size: (size != null ? size! * 0.5 : (height ?? 24) * 0.5).sp,
+        color: Colors.grey,
+      ),
+    );
   }
 
   Widget _buildNetworkImage() {
     return ClipRRect(
-      borderRadius: .circular(borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius),
       child: CachedNetworkImage(
         height: size?.sp ?? height?.h,
         width: size?.sp ?? width?.w,
@@ -56,7 +69,7 @@ class CommonImage extends StatelessWidget {
         fit: fill,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
-            borderRadius: .circular(borderRadius),
+            borderRadius: BorderRadius.circular(borderRadius),
             image: DecorationImage(image: imageProvider, fit: fill),
           ),
         ),
@@ -74,16 +87,19 @@ class CommonImage extends StatelessWidget {
   Widget _buildSvgImage() {
     return SvgPicture.asset(
       imageSrc,
-      color: imageColor,
+      colorFilter: imageColor != null
+          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+          : null,
       height: size?.sp ?? height?.h,
       width: size?.sp ?? width?.w,
       fit: fill,
+      placeholderBuilder: (_) => _buildErrorWidget(),
     );
   }
 
   Widget _buildPngImage() {
     return ClipRRect(
-      borderRadius: .circular(borderRadius),
+      borderRadius: BorderRadius.circular(borderRadius),
       child: Image.asset(
         imageSrc,
         color: imageColor,

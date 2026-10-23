@@ -1,6 +1,18 @@
 class AppString {
   AppString._();
 
+  static const String appName = 'Home To School';
+  static const String home = 'Home';
+  static const String liveTracking = 'Live Tracking';
+  static const String schoolBus = 'School Bus';
+  static const String transitStatus = 'Transit Status';
+  static const String homeToSchool = 'Home to School';
+  static const String schoolToHome = 'School to Home';
+  static const String search = 'Search';
+  static const String driver = 'Driver';
+  static const String parent = 'Parent';
+  static const String student = 'Student';
+
   static const String dataEmpty = 'Data Empty';
   static const String noInternet = 'No Internet';
   static const String checkInternet = 'Check Internet';
@@ -46,7 +58,8 @@ class AppString {
   static const String createYourAccount = 'Create Your Account';
   static const String otpVerify = 'OTP Verify';
   static const String inbox = 'Inbox';
-  static const String searchDoctor = 'search a doctor';
+  static const String searchContacts = 'Search contacts';
+  static const String searchDoctor = 'Search contacts';
   static const String activeNow = 'Active Now';
   static const String messageHere = 'message here';
   static const String notifications = 'Notifications';
@@ -73,4 +86,16 @@ class AppString {
   static const String thePasswordDoesNotMatch = 'The password does not match';
   static const String startServer = 'Please, start the Server';
   static const String unknownError = 'Unknown Error';
+  static const String chooseYourRole = 'Choose your role';
+  static const String chooseYourRoleSubtitle =
+      'Select how you would like to use Home2School.';
+  static const String parentGuardian = 'Parent / Guardian';
+  static const String parentGuardianDesc =
+      'Book & track ride or walk share guide for kids';
+  static const String driverCarpool = 'Driver / Carpool';
+  static const String driverCarpoolDesc =
+      'Drive school routes. Earn flexible income.';
+  static const String walkShare = 'WalkShare';
+  static const String walkShareDesc =
+      'Safely walking neighborhood students to school';
 }

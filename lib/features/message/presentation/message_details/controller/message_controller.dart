@@ -1,158 +1,162 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_code_structure/features/message/data/models/chat_message_model.dart';
-import 'package:flutter_code_structure/features/message/data/repositories/message_repository_impl.dart';
-import 'package:flutter_code_structure/features/message/domain/repositories/message_repository.dart';
-import 'package:flutter_code_structure/services/socket/socket_service.dart';
-import 'package:flutter_code_structure/services/storage/storage_services.dart';
-import 'package:flutter_code_structure/utils/app_snackbar.dart';
-import 'package:flutter_code_structure/utils/enum/enum.dart';
-import 'package:flutter_code_structure/utils/log/error_log.dart';
 import 'package:get/get.dart';
+import 'package:home_to_school/utils/enum/enum.dart';
+
+class MessageItem {
+  final String text;
+  final String time;
+  final bool isMe;
+  final bool isStatus;
+
+  MessageItem({
+    required this.text,
+    required this.time,
+    required this.isMe,
+    this.isStatus = false,
+  });
+}
 
 class MessageController extends GetxController {
-  final MessageRepository _messageRepository;
-
-  MessageController({MessageRepository? messageRepository})
-      : _messageRepository = messageRepository ?? MessageRepositoryImpl();
-
   static MessageController get instance => Get.find<MessageController>();
 
   Status status = Status.completed;
   bool isLoading = false;
-  bool isMoreLoading = false;
   String chatId = '';
-  String name = '';
-  int page = 1;
-  bool isInputField = false;
-  int currentIndex = 0;
-  final List<ChatMessageModel> messages = [];
+  String name = 'Tariq Ahmed';
 
   final ScrollController scrollController = ScrollController();
   final TextEditingController messageController = TextEditingController();
 
+  final List<String> quickReplies = [
+    "I'm on my way",
+    "I've arrived",
+    "Child has been picked up",
+    "Child dropped off safely",
+  ];
+
+  final List<MessageItem> messages = [
+    MessageItem(
+      text:
+          'Good morning Sadia! I am about 5 minutes away from your home pickup.',
+      time: '07:25 AM',
+      isMe: false,
+    ),
+    MessageItem(
+      text:
+          'Good morning Tariq! Arman and Emma are waiting at the front porch with their school backpacks.',
+      time: '07:31 AM',
+      isMe: true,
+    ),
+    MessageItem(
+      text: 'Children safely boarded & buckled in • 07:33 AM',
+      time: '07:33 AM',
+      isMe: false,
+      isStatus: true,
+    ),
+    MessageItem(
+      text:
+          'Got both of them buckled in safely! We are now heading towards Greenfield International School.',
+      time: '07:34 AM',
+      isMe: false,
+    ),
+    MessageItem(
+      text: 'Thank you — please ping when you reach the loop.',
+      time: '07:35 AM',
+      isMe: true,
+    ),
+  ];
+
   @override
   void onInit() {
     super.onInit();
-    scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (scrollController.position.pixels >=
-        scrollController.position.maxScrollExtent) {
-      loadMoreMessages();
+    final params = Get.parameters;
+    if (params['name'] != null && params['name']!.isNotEmpty) {
+      name = params['name']!;
     }
+    if (params['chatId'] != null) {
+      chatId = params['chatId']!;
+    }
+
+    // API calls commented out for now as requested
+    // getMessages();
+    // listenMessage(chatId);
   }
 
-  Future<void> getMessages() async {
-    try {
-      if (page == 1) {
-        messages.clear();
-        status = Status.loading;
-        update();
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
       }
-
-      final messageEntities = await _messageRepository.getMessages(
-        chatId: chatId,
-        page: page,
-        limit: 15,
-      );
-
-      final newMessages = messageEntities
-          .map(
-            (e) => ChatMessageModel(
-              time: e.createdAt.toLocal(),
-              text: e.text,
-              image: e.senderImage,
-              isNotice: e.isNotice,
-              isMe: LocalStorage.user!.id == e.senderId,
-            ),
-          )
-          .toList();
-
-      messages.addAll(newMessages);
-
-      page++;
-      status = Status.completed;
-    } catch (e) {
-      status = Status.error;
-      AppSnackbar.error(title: 'Error', message: e.toString());
-    } finally {
-      update();
-    }
+    });
   }
 
-  Future<void> loadMoreMessages() async {
-    if (isMoreLoading || status == Status.loading) return;
-    try {
-      isMoreLoading = true;
-      update();
-      await getMessages();
-    } catch (e) {
-      errorLog(e.toString());
-    } finally {
-      isMoreLoading = false;
-      update();
-    }
+  String _formatCurrentTime() {
+    final now = DateTime.now();
+    final hour = now.hour % 12 == 0 ? 12 : now.hour % 12;
+    final minute = now.minute.toString().padLeft(2, '0');
+    final amPm = now.hour >= 12 ? 'PM' : 'AM';
+    return '${hour.toString().padLeft(2, '0')}:$minute $amPm';
   }
 
-  Future<void> sendMessage() async {
+  void sendMessage() {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
-    messages.insert(
-      0,
-      ChatMessageModel(
-        time: DateTime.now(),
+    messages.add(
+      MessageItem(
         text: text,
-        image: LocalStorage.user!.image,
+        time: _formatCurrentTime(),
         isMe: true,
       ),
     );
 
+    messageController.clear();
     update();
+    _scrollToBottom();
 
+    // API & Socket calls commented out for now
+    /*
+    final currentUserId = LocalStorage.user?.id ?? LocalStorage.userId;
     _messageRepository.sendMessage(
       chatId: chatId,
       text: text,
-      senderId: LocalStorage.user!.id,
+      senderId: currentUserId,
     );
+    */
+  }
 
-    messageController.clear();
+  void sendQuickReply(String reply) {
+    messageController.text = reply;
+    messageController.selection = TextSelection.fromPosition(
+      TextPosition(offset: reply.length),
+    );
+    update();
+  }
+
+  // Commented out API fetching methods
+  /*
+  Future<void> getMessages() async {
+    try {
+      final messageEntities = await _messageRepository.getMessages(
+        chatId: chatId,
+        page: 1,
+        limit: 15,
+      );
+    } catch (e) {
+      status = Status.error;
+    }
   }
 
   void listenMessage(String chatId) {
     SocketService.on('new-message::$chatId', (data) {
-      final text = data['message'] ?? '';
-      final senderImage = data['sender']?['image'] ?? '';
-      final isNotice = data['type'] == 'notice';
-
-      messages.insert(
-        0,
-        ChatMessageModel(
-          time: DateTime.now(),
-          text: text,
-          image: senderImage,
-          isNotice: isNotice,
-          isMe: false,
-        ),
-      );
-
-      update();
+      // socket listener
     });
   }
-
-  void toggleInput(int index) {
-    currentIndex = index;
-    isInputField = !isInputField;
-    update();
-  }
-
-  @override
-  Future<void> refresh() async {
-    page = 1;
-    await getMessages();
-  }
+  */
 
   @override
   void onClose() {

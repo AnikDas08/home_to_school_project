@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
 
-import '../../../../component/text/common_text.dart';
-import '../../../../component/text_field/common_phone_number_text_filed.dart';
-import '../../../../component/text_field/common_text_field.dart';
-
-import '../../../../utils/extensions/extension.dart';
-import '../../../../utils/helpers/validation.dart';
-import '../../../../../utils/constants/app_colors.dart';
-import '../../../../../utils/constants/app_string.dart';
+import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/component/text_field/common_phone_number_text_filed.dart';
+import 'package:home_to_school/component/text_field/common_text_field.dart';
+import 'package:home_to_school/utils/constants/app_colors.dart';
+import 'package:home_to_school/utils/constants/app_string.dart';
+import 'package:home_to_school/utils/extensions/extension.dart';
+import 'package:home_to_school/utils/helpers/validation.dart';
 
 import '../controller/profile_controller.dart';
 
@@ -20,12 +19,12 @@ class EditProfileAllFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Full name
-        const CommonText(text: AppString.fullName, fontWeight: .w600),
+        const CommonText(text: AppString.fullName, fontWeight: FontWeight.w600),
 
-        120.height,
+        12.height,
 
         CommonTextField(
           controller: controller.nameController,

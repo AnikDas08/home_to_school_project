@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_code_structure/features/message/data/models/chat_list_model.dart';
-import 'package:flutter_code_structure/features/message/data/repositories/message_repository_impl.dart';
-import 'package:flutter_code_structure/features/message/domain/repositories/message_repository.dart';
-import 'package:flutter_code_structure/services/socket/socket_service.dart';
-import 'package:flutter_code_structure/services/storage/storage_services.dart';
-import 'package:flutter_code_structure/utils/app_snackbar.dart';
-import 'package:flutter_code_structure/utils/enum/enum.dart';
+import 'package:home_to_school/features/message/data/models/chat_list_model.dart';
+import 'package:home_to_school/features/message/data/repositories/message_repository_impl.dart';
+import 'package:home_to_school/features/message/domain/repositories/message_repository.dart';
+import 'package:home_to_school/services/socket/socket_service.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
+import 'package:home_to_school/utils/app_snackbar.dart';
+import 'package:home_to_school/utils/enum/enum.dart';
 import 'package:get/get.dart';
 
 class ChatController extends GetxController {
@@ -26,8 +26,9 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getChats();
-    listenChat();
+    // Design phase: API and socket calls commented out
+    // getChats();
+    // listenChat();
     scrollController.addListener(_onScroll);
   }
 
@@ -52,7 +53,6 @@ class ChatController extends GetxController {
   }
 
   Future<void> getChats() async {
-    return;
     try {
       if (page == 1) {
         status = Status.loading;

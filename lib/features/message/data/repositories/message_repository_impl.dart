@@ -1,4 +1,4 @@
-import 'package:flutter_code_structure/services/socket/socket_service.dart';
+import 'package:home_to_school/services/socket/socket_service.dart';
 
 import '../../domain/entities/chat_entity.dart';
 import '../../domain/entities/message_entity.dart';

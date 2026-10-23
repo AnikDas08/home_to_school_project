@@ -1,5 +1,5 @@
-import 'package:flutter_code_structure/config/api/api_end_point.dart';
-import 'package:flutter_code_structure/services/api/api_service.dart';
+import 'package:home_to_school/config/api/api_end_point.dart';
+import 'package:home_to_school/services/api/api_service.dart';
 import '../models/chat_list_model.dart';
 import '../models/message_model.dart';
 

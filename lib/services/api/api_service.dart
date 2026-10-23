@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_code_structure/config/api/api_end_point.dart';
-import 'package:flutter_code_structure/utils/constants/app_string.dart';
-import 'package:flutter_code_structure/utils/log/api_log.dart';
+import 'package:home_to_school/config/api/api_end_point.dart';
+import 'package:home_to_school/utils/constants/app_string.dart';
+import 'package:home_to_school/utils/log/api_log.dart';
 import 'package:mime/mime.dart';
 import '../storage/storage_services.dart';
 import 'api_client.dart';
@@ -242,13 +242,10 @@ class DioApiClient implements ApiClient {
     Map<String, String> body = const {},
     String method = 'POST',
     Map<String, String>? headers,
-  }) =>
-      ApiService.multipart(
-        url,
-        header: headers ?? {},
-        body: body,
-        method: method,
-      );
+  }) async {
+    final formData = await MultipartHelper.build(files: files, fields: body);
+    return ApiService._request(url, method, body: formData, header: headers);
+  }
 }
 
 /// ========== [ DIO INSTANCE WITH INTERCEPTORS ] ========== ///

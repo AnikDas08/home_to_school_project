@@ -131,8 +131,9 @@ void logOutPopUp() {
                       Expanded(
                         child: CommonButton(
                           titleText: AppString.yes,
-                          onTap: () {
-                            //LocalStorage.logout();
+                          onTap: () async {
+                            Get.back();
+                            await LocalStorage.removeAllPrefData();
                           },
                         ),
                       ),

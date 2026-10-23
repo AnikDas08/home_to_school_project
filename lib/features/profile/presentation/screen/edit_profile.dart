@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../../../../utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../component/button/common_button.dart';
-import '../../../../component/image/common_image.dart';
-import '../../../../component/text/common_text.dart';
-import '../../../../services/storage/storage_services.dart';
+import 'package:home_to_school/component/button/common_button.dart';
+import 'package:home_to_school/component/image/common_image.dart';
+import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
+import 'package:home_to_school/utils/constants/app_images.dart';
+import 'package:home_to_school/utils/constants/app_string.dart';
+import 'package:home_to_school/utils/extensions/extension.dart';
 import '../controller/profile_controller.dart';
-import '../../../../../../utils/constants/app_images.dart';
-import '../../../../../../utils/constants/app_string.dart';
 import '../widgets/edit_profile_all_filed.dart';
 
 class EditProfile extends StatelessWidget {
@@ -21,7 +21,7 @@ class EditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ProfileController>(
       builder: (controller) {
-        //final userImage = LocalStorage.user.image;
+        final userImage = LocalStorage.user?.image ?? LocalStorage.myImage;
 
         return Scaffold(
           /// AppBar
@@ -30,22 +30,22 @@ class EditProfile extends StatelessWidget {
             title: const CommonText(
               text: AppString.profile,
               fontSize: 20,
-              fontWeight: .w600,
+              fontWeight: FontWeight.w600,
             ),
           ),
 
           /// Body
           body: SingleChildScrollView(
-            padding: .symmetric(horizontal: 20.w, vertical: 24.h),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
                   /// Profile image
                   Stack(
-                    alignment: .bottomRight,
+                    alignment: Alignment.bottomRight,
                     children: [
-                      /*CircleAvatar(
+                      CircleAvatar(
                         radius: 70.r,
                         backgroundColor: Colors.transparent,
                         child: ClipOval(
@@ -60,16 +60,15 @@ class EditProfile extends StatelessWidget {
                                   imageSrc: userImage.isEmpty
                                       ? AppImages.profile
                                       : userImage,
-                                  width: 140,
-                                  height: 140,
+                                  size: 140,
                                 ),
                         ),
-                      ),*/
+                      ),
 
                       /// Edit icon
                       IconButton(
                         onPressed: controller.getProfileImage,
-                        icon: const Icon(Icons.edit),
+                        icon: const Icon(Icons.camera_alt),
                         color: Colors.white,
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.black,

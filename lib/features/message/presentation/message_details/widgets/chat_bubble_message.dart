@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_code_structure/component/image/common_image.dart';
-import 'package:flutter_code_structure/component/text/common_text.dart';
-import 'package:flutter_code_structure/utils/constants/app_colors.dart';
-import 'package:flutter_code_structure/utils/extensions/extension.dart';
+import 'package:home_to_school/component/image/common_image.dart';
+import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/utils/constants/app_colors.dart';
+import 'package:home_to_school/utils/extensions/extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -51,7 +51,9 @@ class ChatBubbleMessage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonText(text: text, color: textColor),
+                    CommonText(
+                        text: text, color: textColor,maxLines: 4,
+                    ),
                     4.height,
                     Align(
                       alignment: Alignment.bottomRight,
@@ -60,6 +62,7 @@ class ChatBubbleMessage extends StatelessWidget {
                             '${time.hour}:${time.minute.toString().padLeft(2, '0')}',
                         fontSize: 10,
                         color: textColor.withValues(alpha: .7),
+                        maxLines: 4,
                       ),
                     ),
                   ],

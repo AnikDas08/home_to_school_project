@@ -6,16 +6,16 @@ import '../../../utils/constants/app_colors.dart';
 import '../../../utils/log/app_log.dart';
 
 final List<Widget> _unselectedIcons = [
-  const Icon(Icons.settings_outlined, color: AppColors.black),
+  const Icon(Icons.home_outlined, color: AppColors.black),
   const Icon(Icons.notifications_outlined, color: AppColors.black),
-  const Icon(Icons.chat, color: AppColors.black),
-  const Icon(Icons.person_2_outlined, color: AppColors.black),
+  const Icon(Icons.chat_bubble_outline, color: AppColors.black),
+  const Icon(Icons.person_outline, color: AppColors.black),
 ];
 
 final List<Widget> _selectedIcons = [
-  const Icon(Icons.settings_outlined, color: AppColors.primaryColor),
+  const Icon(Icons.home, color: AppColors.primaryColor),
   const Icon(Icons.notifications, color: AppColors.primaryColor),
-  const Icon(Icons.chat, color: AppColors.primaryColor),
+  const Icon(Icons.chat_bubble, color: AppColors.primaryColor),
   const Icon(Icons.person, color: AppColors.primaryColor),
 ];
 
@@ -64,7 +64,7 @@ class CommonBottomNavBar extends StatelessWidget {
     if (index == currentIndex) return;
     switch (index) {
       case 0:
-        Get.toNamed(AppRoutes.setting);
+        Get.offAllNamed(AppRoutes.home);
         break;
 
       case 1:

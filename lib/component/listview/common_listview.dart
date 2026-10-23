@@ -137,7 +137,7 @@ class _CommonListViewState extends State<CommonListView> {
         cacheExtent: widget.cacheExtent,
         dragStartBehavior: widget.dragStartBehavior,
         restorationId: widget.restorationId,
-        findChildIndexCallback: widget.findChildIndexCallback,
+        findItemIndexCallback: widget.findChildIndexCallback,
         separatorBuilder: (context, index) {
           if (widget.isLoadingMore && index == widget.itemCount - 1) {
             return const SizedBox.shrink();

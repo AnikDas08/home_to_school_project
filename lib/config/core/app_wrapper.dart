@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/log/global_log.dart';
@@ -15,9 +16,14 @@ class AppWrapper extends StatefulWidget {
 class _AppWrapperState extends State<AppWrapper> {
   final AppLifecycleHandler _lifecycleHandler = AppLifecycleHandler();
 
+  FlutterExceptionHandler? _originalOnError;
+  ErrorWidgetBuilder? _originalErrorWidgetBuilder;
+
   @override
   void initState() {
     super.initState();
+    _originalOnError = FlutterError.onError;
+    _originalErrorWidgetBuilder = ErrorWidget.builder;
 
     _setupGlobalErrorHandling();
     _lifecycleHandler.start();
@@ -47,6 +53,10 @@ class _AppWrapperState extends State<AppWrapper> {
 
   @override
   void dispose() {
+    FlutterError.onError = _originalOnError;
+    if (_originalErrorWidgetBuilder != null) {
+      ErrorWidget.builder = _originalErrorWidgetBuilder!;
+    }
     _lifecycleHandler.stop();
     super.dispose();
   }

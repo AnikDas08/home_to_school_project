@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/constants/app_colors.dart';
 import '../other_widgets/common_loader.dart';
@@ -23,10 +24,10 @@ class CommonButton extends StatelessWidget {
     required this.titleText,
     this.titleColor = AppColors.white,
     this.buttonColor = AppColors.primaryColor,
-    this.titleSize = 16,
-    this.buttonRadius = 10,
+    this.titleSize = 14,
+    this.buttonRadius = 12,
     this.titleWeight = FontWeight.w700,
-    this.buttonHeight = 48,
+    this.buttonHeight = 44,
     this.borderWidth = 1,
     this.isLoading = false,
     this.buttonWidth = double.infinity,
@@ -41,7 +42,19 @@ class CommonButton extends StatelessWidget {
 
   Widget _buildElevatedButton() {
     return ElevatedButton(
-      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: buttonColor,
+        elevation: 0,
+        minimumSize: Size(buttonWidth, buttonHeight),
+        maximumSize: Size(buttonWidth, buttonHeight),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(buttonRadius),
+          side: borderColor != null
+              ? BorderSide(color: borderColor!, width: borderWidth)
+              : BorderSide.none,
+        ),
+      ),
+      onPressed: isLoading ? null : onTap,
       child: isLoading ? _buildLoader() : _buildText(),
     );
   }

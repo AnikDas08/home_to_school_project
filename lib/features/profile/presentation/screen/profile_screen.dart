@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../../../config/route/app_routes.dart';
-import '../../../../../../utils/constants/app_string.dart';
-
-import '../../../../component/bottom_nav_bar/common_bottom_bar.dart';
-import '../../../../component/image/common_image.dart';
-import '../../../../component/other_widgets/item.dart';
-import '../../../../component/pop_up/common_pop_menu.dart';
-import '../../../../component/text/common_text.dart';
-
-import '../../../../services/storage/storage_services.dart';
-import '../../../../utils/extensions/extension.dart';
+import 'package:home_to_school/component/bottom_nav_bar/common_bottom_bar.dart';
+import 'package:home_to_school/component/image/common_image.dart';
+import 'package:home_to_school/component/other_widgets/item.dart';
+import 'package:home_to_school/component/pop_up/common_pop_menu.dart';
+import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
+import 'package:home_to_school/utils/constants/app_string.dart';
+import 'package:home_to_school/utils/extensions/extension.dart';
 import '../controller/profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -25,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const CommonText(
           text: AppString.profile,
-          fontWeight: .w600,
+          fontWeight: FontWeight.w600,
           fontSize: 24,
         ),
       ),
@@ -34,23 +32,34 @@ class ProfileScreen extends StatelessWidget {
       body: GetBuilder<ProfileController>(
         builder: (controller) {
           final user = LocalStorage.user;
+          final userName = user?.name.isNotEmpty == true
+              ? user!.name
+              : (LocalStorage.myName.isNotEmpty ? LocalStorage.myName : 'User');
+          final userImage = user?.image ?? LocalStorage.myImage;
 
           return SingleChildScrollView(
-            padding: .symmetric(horizontal: 20.w, vertical: 24.h),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
             child: Column(
               children: [
                 /// Profile image
                 16.height,
 
                 CircleAvatar(
+                  radius: 70.r,
                   backgroundColor: Colors.transparent,
                   child: ClipOval(
-                    child: CommonImage(imageSrc: user!.image, size: 140),
+                    child: CommonImage(imageSrc: userImage, size: 140),
                   ),
                 ),
 
+                12.height,
+
                 /// Name
-                CommonText(text: user.name, fontSize: 18, fontWeight: .w700),
+                CommonText(
+                  text: userName,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
 
                 24.height,
 

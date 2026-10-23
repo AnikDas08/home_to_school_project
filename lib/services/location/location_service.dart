@@ -1,7 +1,7 @@
 // import 'package:geolocator/geolocator.dart';
 // import 'package:geocoding/geocoding.dart';
-// import 'package:untitled/utils/log/app_log.dart';
-// import 'package:untitled/utils/log/error_log.dart';
+// import 'package:home_to_school/utils/log/app_log.dart';
+// import 'package:home_to_school/utils/log/error_log.dart';
 //
 // class LocationService {
 //   /// Initialize location service

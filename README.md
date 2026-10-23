@@ -1,17 +1,17 @@
-# flutter_code_structure
+# Home to School
 
-A new Flutter project.
+A modern Flutter application designed for school transit and transportation management, connecting parents, students, drivers, and schools.
 
-## Getting Started
+## Features
+- **Splash & Onboarding**: Seamless introduction and role selection.
+- **Authentication**: Sign In, Sign Up with OTP verification, and Password recovery.
+- **Home / Transit Dashboard**: Live transit status (Home to School / School to Home), bus tracking, and child info.
+- **Messaging & Chat**: Direct communication between parents, drivers, and school coordinators.
+- **Notifications**: Real-time push updates for bus arrival, delays, and announcements.
+- **Profile & Settings**: Profile customization, language preferences, and safety terms.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Architecture
+- Clean modular structure with `features/`, `component/`, `config/`, `services/`, and `utils/`.
+- State Management: GetX.
+- Networking: Dio with interceptors and multipart support.
+- Local Storage: SharedPreferences.

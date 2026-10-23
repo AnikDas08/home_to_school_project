@@ -15,12 +15,16 @@ class LocalStorage {
   static String myName = '';
   static String myEmail = '';
   static String myRole = '';
+  static String role = '';
   static String image = '';
   static UserModel? user;
 
   static SharedPreferences? preferences;
 
   static bool get isChef => myRole.toLowerCase() == 'chef';
+  static bool get isParent => myRole.toLowerCase() == 'parent' || myRole.isEmpty;
+  static bool get isDriver => myRole.toLowerCase() == 'driver';
+  static bool get isStudent => myRole.toLowerCase() == 'student';
 
   static Future<SharedPreferences> _getStorage() async {
     preferences ??= await SharedPreferences.getInstance();
@@ -39,8 +43,20 @@ class LocalStorage {
     myName = localStorage.getString(LocalStorageKeys.myName) ?? '';
     myEmail = localStorage.getString(LocalStorageKeys.myEmail) ?? '';
     myRole = localStorage.getString(LocalStorageKeys.myRole) ?? '';
+    role = localStorage.getString(LocalStorageKeys.role) ?? myRole;
+    if (myRole.isEmpty && role.isNotEmpty) {
+      myRole = role;
+    }
 
     appLog(userId, source: 'Local Storage');
+  }
+
+  /// Save Selected Role To SharedPreferences and LocalStorage
+  static Future<void> saveRole(String selectedRole) async {
+    role = selectedRole;
+    myRole = selectedRole;
+    await setString(LocalStorageKeys.role, selectedRole);
+    await setString(LocalStorageKeys.myRole, selectedRole);
   }
 
   /// Remove All Data From SharedPreferences

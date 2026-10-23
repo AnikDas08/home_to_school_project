@@ -1,101 +1,99 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../utils/app_snackbar.dart';
-import '../../data/model/notification_model.dart';
-import '../../repository/notification_repository.dart';
+class AppNotificationItem {
+  final String id;
+  final String title;
+  final String message;
+  final String time;
+  bool isRead;
+
+  AppNotificationItem({
+    required this.id,
+    required this.title,
+    required this.message,
+    required this.time,
+    this.isRead = false,
+  });
+}
 
 class NotificationsController extends GetxController {
-  /// Notification list
-  final List<NotificationModel> notifications = [];
-  bool isLoading = false;
-  bool isLoadingMore = false;
-  bool hasNoData = false;
-  int page = 1;
-
-  /// Scroll controller
-  final ScrollController scrollController = ScrollController();
-
-  /// Get instance
   static NotificationsController get instance =>
       Get.find<NotificationsController>();
 
-  /// Init
-  @override
-  void onInit() {
-    super.onInit();
-    scrollController.addListener(_onScroll);
-    getNotifications();
-  }
+  /// Selected tab: 0 = All, 1 = Unread
+  int selectedTabIndex = 0;
 
-  /// Scroll listener
-  void _onScroll() {
-    if (scrollController.position.pixels >=
-        scrollController.position.maxScrollExtent) {
-      loadMore();
+  /// Notifications mock dataset matching design
+  final List<AppNotificationItem> notifications = [
+    AppNotificationItem(
+      id: '1',
+      title: 'Driver 5 Mins Away',
+      message:
+          'Tariq Ahmed is approaching 12 Elm Street for morning school pickup.',
+      time: 'Just now',
+      isRead: false,
+    ),
+    AppNotificationItem(
+      id: '2',
+      title: 'Schedule Confirmed',
+      message:
+          'Recurring school commute for Arman & Emma confirmed for next week.',
+      time: '1 hr ago',
+      isRead: false,
+    ),
+    AppNotificationItem(
+      id: '3',
+      title: 'Safety Protocol Active',
+      message:
+          'All 3 emergency safety contacts verified and synced with school dispatch.',
+      time: 'Yesterday',
+      isRead: true,
+    ),
+    AppNotificationItem(
+      id: '4',
+      title: 'Rate Your Last Ride',
+      message:
+          'Help maintain high safety standards by leaving feedback for Tariq Ahmed.',
+      time: 'May 21',
+      isRead: true,
+    ),
+  ];
+
+  /// Get total count of notifications
+  int get allCount => notifications.length;
+
+  /// Get unread count
+  int get unreadCount => notifications.where((n) => !n.isRead).length;
+
+  /// Filtered list based on active tab
+  List<AppNotificationItem> get filteredNotifications {
+    if (selectedTabIndex == 1) {
+      return notifications.where((n) => !n.isRead).toList();
     }
+    return notifications;
   }
 
-  /// Fetch notifications (first load)
-  Future<void> getNotifications() async {
-    if (isLoading) return;
-    try {
-      isLoading = true;
-      update();
+  /// Change filter tab
+  void selectTab(int index) {
+    if (selectedTabIndex == index) return;
+    selectedTabIndex = index;
+    update();
+  }
 
-      final list = await notificationRepository(page);
+  /// Mark all as read
+  void markAllAsRead() {
+    for (final item in notifications) {
+      item.isRead = true;
+    }
+    update();
+  }
 
-      if (list.isEmpty) {
-        hasNoData = true;
-      } else {
-        notifications.addAll(list);
-        page++;
-      }
-    } catch (e) {
-      AppSnackbar.error(title: 'Error', message: e.toString());
-    } finally {
-      isLoading = false;
+  /// Toggle read status for individual notification
+  void toggleRead(String id) {
+    final index = notifications.indexWhere((n) => n.id == id);
+    if (index != -1) {
+      notifications[index].isRead = !notifications[index].isRead;
       update();
     }
-  }
-
-  /// Load more notifications (pagination)
-  Future<void> loadMore() async {
-    if (isLoadingMore || hasNoData) return;
-
-    try {
-      isLoadingMore = true;
-      update();
-
-      final list = await notificationRepository(page);
-
-      if (list.isEmpty) {
-        hasNoData = true;
-      } else {
-        notifications.addAll(list);
-        page++;
-      }
-    } catch (e) {
-      AppSnackbar.error(title: 'Error', message: e.toString());
-    } finally {
-      isLoadingMore = false;
-      update();
-    }
-  }
-
-  /// Refresh manually
-  @override
-  Future<void> refresh() async {
-    page = 1;
-    hasNoData = false;
-    notifications.clear();
-    await getNotifications();
-  }
-
-  /// Dispose
-  @override
-  void onClose() {
-    scrollController.dispose();
-    super.onClose();
   }
 }
