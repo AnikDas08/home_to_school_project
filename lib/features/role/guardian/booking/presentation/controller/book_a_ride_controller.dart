@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import 'package:home_to_school/config/route/app_routes.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 
 class ChildModel {
@@ -192,15 +193,6 @@ class BookARideController extends GetxController {
   }
 
   void searchProviders() {
-    if (selectedChildrenIds.isEmpty) {
-      AppSnackbar.error(
-        message: 'Please select at least one child',
-      );
-      return;
-    }
-    AppSnackbar.success(
-      title: 'Booking',
-      message: 'Searching available providers for your commute...',
-    );
+    Get.toNamed(AppRoutes.availableProviders);
   }
 }

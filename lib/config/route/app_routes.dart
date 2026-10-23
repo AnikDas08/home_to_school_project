@@ -11,6 +11,9 @@ import 'package:home_to_school/features/common/onboarding/onboarding_screen.dart
 import 'package:home_to_school/features/common/splash/splash_screen.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/guardian_booking_screen.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/book_a_ride_screen.dart';
+import 'package:home_to_school/features/role/guardian/booking/presentation/screen/available_providers_screen.dart';
+import 'package:home_to_school/features/role/guardian/booking/presentation/screen/driver_profile_screen.dart';
+import 'package:home_to_school/features/role/guardian/booking/presentation/screen/booking_summary_screen.dart';
 import 'package:home_to_school/features/role/guardian/home/presentation/screen/all_trips_screen.dart';
 import 'package:home_to_school/features/role/guardian/home/presentation/screen/home_screen.dart';
 import 'package:home_to_school/features/message/presentation/chat_list/screen/chat_screen.dart';
@@ -54,6 +57,9 @@ class AppRoutes {
   static const String bookings = '/bookings';
   static const String bookRide = '/book-a-ride';
   static const String addBooking = '/add-booking';
+  static const String availableProviders = '/available-providers';
+  static const String driverProfile = '/driver-profile';
+  static const String bookingSummary = '/booking-summary';
   static const String allTrips = '/all-trips';
   static const String notifications = '/notifications';
   static const String chat = '/chat';
@@ -95,6 +101,9 @@ class AppRoutes {
     GetPage(name: bookings, page: () => const GuardianBookingScreen()),
     GetPage(name: bookRide, page: () => const BookARideScreen()),
     GetPage(name: addBooking, page: () => const BookARideScreen()),
+    GetPage(name: availableProviders, page: () => const AvailableProvidersScreen()),
+    GetPage(name: driverProfile, page: () => const DriverProfileScreen()),
+    GetPage(name: bookingSummary, page: () => const BookingSummaryScreen()),
     GetPage(name: allTrips, page: () => const GuardianBookingScreen()),
     GetPage(name: notifications, page: () => const NotificationScreen()),
     GetPage(name: chat, page: () => const ChatListScreen()),
