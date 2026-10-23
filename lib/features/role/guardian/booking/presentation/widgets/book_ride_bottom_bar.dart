@@ -78,7 +78,6 @@ class BookRideBottomBar extends StatelessWidget {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF94A3B8),
-                        letterSpacing: 0.6,
                       ),
                     ],
                   ),
