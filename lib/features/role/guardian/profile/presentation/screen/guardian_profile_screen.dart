@@ -1,13 +1,16 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/features/common/nav_screen/controller/nav_controller.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/controller/guardian_profile_controller.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/widgets/profile_menu_row.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/widgets/refer_friend_dialog.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/widgets/switch_role_dialog.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/constants/app_images.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -21,13 +24,25 @@ class GuardianProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      /// App Bar - Centered title, strictly NO back icon as requested
+      /// App Bar - matching design with back icon and centered title
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-        automaticallyImplyLeading: false,
-        leading: null,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.chevron_left_rounded,
+            size: 28,
+            color: Color(0xFF0F172A),
+          ),
+          onPressed: () {
+            if (Get.isRegistered<NavController>()) {
+              Get.find<NavController>().changeIndex(0);
+            } else if (Navigator.of(context).canPop()) {
+              Get.back();
+            }
+          },
+        ),
         centerTitle: true,
         title: const CommonText(
           text: 'Parent Profile',
@@ -121,21 +136,7 @@ class GuardianProfileScreen extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(30.r),
-                  child: Image.asset(
-                    AppImages.profileImage,
-                    width: 58.w,
-                    height: 58.w,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => CircleAvatar(
-                      radius: 29.r,
-                      backgroundColor: const Color(0xFFEFF6FF),
-                      child: Icon(
-                        Icons.person,
-                        size: 30.sp,
-                        color: const Color(0xFF1B2B68),
-                      ),
-                    ),
-                  ),
+                  child: _buildProfileAvatar(58.w, 58.w),
                 ),
                 Positioned(
                   bottom: -2,
@@ -332,8 +333,13 @@ class GuardianProfileScreen extends StatelessWidget {
           ProfileMenuRow(
             icon: Icons.description_outlined,
             title: 'Terms of Service',
-            showDivider: false,
             onTap: () => Get.toNamed(AppRoutes.termsOfServices),
+          ),
+          ProfileMenuRow(
+            icon: Icons.info_outline_rounded,
+            title: 'About Home2School',
+            showDivider: false,
+            onTap: () => Get.toNamed(AppRoutes.about),
           ),
         ],
       ),
@@ -468,6 +474,35 @@ class GuardianProfileScreen extends StatelessWidget {
               color: Color(0xFFEF4444),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileAvatar(double width, double height) {
+    if (LocalStorage.myImage.isNotEmpty) {
+      final file = File(LocalStorage.myImage);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          width: width,
+          height: height,
+          fit: BoxFit.cover,
+        );
+      }
+    }
+    return Image.asset(
+      AppImages.profileImage,
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => CircleAvatar(
+        radius: (width / 2).r,
+        backgroundColor: const Color(0xFFEFF6FF),
+        child: Icon(
+          Icons.person,
+          size: 30.sp,
+          color: const Color(0xFF1B2B68),
         ),
       ),
     );

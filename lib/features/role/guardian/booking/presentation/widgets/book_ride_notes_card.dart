@@ -59,7 +59,8 @@ class BookRideNotesCard extends StatelessWidget {
                         'e.g. Gate 2 pickup, booster seat required, handover PIN instructions...',
                     hintStyle: TextStyle(
                       fontSize: 12.sp,
-                      color: const Color(0xFF94A3B8),
+                      color: const Color(0xFF9CA3AF),
+                      fontWeight: FontWeight.w400,
                       height: 1.4,
                     ),
                   ),

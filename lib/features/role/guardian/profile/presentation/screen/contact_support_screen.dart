@@ -43,6 +43,7 @@ class _ContactSupportScreenState extends State<ContactSupportScreen> {
   void _showTopicPicker() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -50,11 +51,14 @@ class _ContactSupportScreenState extends State<ContactSupportScreen> {
       ),
       builder: (ctx) {
         return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.h),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(ctx).size.height * 0.75,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                14.height,
                 Container(
                   width: 40.w,
                   height: 4.h,
@@ -63,7 +67,7 @@ class _ContactSupportScreenState extends State<ContactSupportScreen> {
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
-                16.height,
+                14.height,
                 const CommonText(
                   text: 'Select Support Topic',
                   fontSize: 16,
@@ -72,32 +76,47 @@ class _ContactSupportScreenState extends State<ContactSupportScreen> {
                 ),
                 12.height,
                 const Divider(height: 1, color: Color(0xFFF1F5F9)),
-                ..._topics.map((topic) {
-                  final isSelected = _selectedTopic == topic;
-                  return ListTile(
-                    title: CommonText(
-                      text: topic,
-                      fontSize: 14,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-                      color: isSelected
-                          ? const Color(0xFF1B2B68)
-                          : const Color(0xFF0F172A),
-                      textAlign: TextAlign.start,
+                Flexible(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.only(bottom: 12.h),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _topics.map((topic) {
+                        final isSelected = _selectedTopic == topic;
+                        return ListTile(
+                          dense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 2.h,
+                          ),
+                          title: CommonText(
+                            text: topic,
+                            fontSize: 14,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w400,
+                            color: isSelected
+                                ? const Color(0xFF1B2B68)
+                                : const Color(0xFF0F172A),
+                            textAlign: TextAlign.start,
+                          ),
+                          trailing: isSelected
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  color: Color(0xFF1B2B68),
+                                )
+                              : null,
+                          onTap: () {
+                            setState(() {
+                              _selectedTopic = topic;
+                            });
+                            Navigator.pop(ctx);
+                          },
+                        );
+                      }).toList(),
                     ),
-                    trailing: isSelected
-                        ? const Icon(
-                            Icons.check_rounded,
-                            color: Color(0xFF1B2B68),
-                          )
-                        : null,
-                    onTap: () {
-                      setState(() {
-                        _selectedTopic = topic;
-                      });
-                      Navigator.pop(ctx);
-                    },
-                  );
-                }),
+                  ),
+                ),
               ],
             ),
           ),

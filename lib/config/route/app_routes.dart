@@ -14,6 +14,30 @@ import 'package:home_to_school/features/role/guardian/booking/presentation/scree
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/available_providers_screen.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/driver_profile_screen.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/booking_summary_screen.dart';
+import 'package:home_to_school/features/role/guardian/booking/presentation/screen/guardian_trip_details_screen.dart';
+import 'package:home_to_school/features/role/guardian/booking/presentation/screen/guardian_live_track_screen.dart';
+import 'package:home_to_school/features/role/driver/presentation/screen/driver_licence_screen.dart';
+import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_details_screen.dart';
+import 'package:home_to_school/features/role/driver/home/presentation/screen/driver_home_screen.dart';
+import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_requests_screen.dart';
+import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_request_details_screen.dart';
+import 'package:home_to_school/features/role/driver/schedule/presentation/screen/driver_schedule_screen.dart';
+import 'package:home_to_school/features/role/driver/active_trip/presentation/screen/driver_active_trip_screen.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_role_profile_screen.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_vehicle_info_screen.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_documents_screen.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/screen/document_details_screen.dart';
+import 'package:home_to_school/features/common/about/presentation/screen/about_screen.dart';
+import 'package:home_to_school/features/role/driver/availability/presentation/screen/driver_availability_screen.dart';
+import 'package:home_to_school/features/role/walkshare/presentation/screen/walkshare_verification_screen.dart';
+import 'package:home_to_school/features/role/walkshare/home/presentation/screen/walkshare_home_screen.dart';
+import 'package:home_to_school/features/role/walkshare/requests/presentation/screen/walkshare_requests_screen.dart';
+import 'package:home_to_school/features/role/walkshare/requests/presentation/screen/walkshare_request_details_screen.dart';
+import 'package:home_to_school/features/role/walkshare/schedule/presentation/screen/walkshare_schedule_screen.dart';
+import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_profile_screen.dart';
+import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_documents_screen.dart';
+import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_reviews_screen.dart';
+import 'package:home_to_school/features/role/walkshare/active_walk/presentation/screen/walkshare_active_walk_screen.dart';
 import 'package:home_to_school/features/role/guardian/home/presentation/screen/all_trips_screen.dart';
 import 'package:home_to_school/features/role/guardian/home/presentation/screen/home_screen.dart';
 import 'package:home_to_school/features/message/presentation/chat_list/screen/chat_screen.dart';
@@ -37,6 +61,7 @@ import 'package:home_to_school/features/setting/presentation/screen/setting_scre
 import 'package:home_to_school/features/setting/presentation/screen/terms_of_service_screen.dart';
 
 import 'package:home_to_school/features/common/nav_screen/screen/nav_screen.dart';
+import 'package:home_to_school/features/common/sos/presentation/screen/sos_screen.dart';
 import '../../features/common/role_selection/presentation/screen/role_selection_screen.dart';
 
 class AppRoutes {
@@ -60,6 +85,29 @@ class AppRoutes {
   static const String availableProviders = '/available-providers';
   static const String driverProfile = '/driver-profile';
   static const String bookingSummary = '/booking-summary';
+  static const String tripDetails = '/trip-details';
+  static const String guardianLiveTrack = '/guardian-live-track';
+  static const String driverLicence = '/driver-licence';
+  static const String driverVehicleDetails = '/driver-vehicle-details';
+  static const String driverVehicleInfo = '/driver-vehicle-info';
+  static const String driverDocuments = '/driver-documents';
+  static const String documentDetails = '/document-details';
+  static const String driverHome = '/driver-home';
+  static const String driverRequests = '/driver-requests';
+  static const String driverRequestDetails = '/driver-request-details';
+  static const String driverSchedule = '/driver-schedule';
+  static const String driverActiveTrip = '/driver-active-trip';
+  static const String driverAccountProfile = '/driver-account-profile';
+  static const String driverAvailability = '/driver-availability';
+  static const String walkshareVerification = '/walkshare-verification';
+  static const String walkshareHome = '/walkshare-home';
+  static const String walkshareRequests = '/walkshare-requests';
+  static const String walkshareRequestDetails = '/walkshare-request-details';
+  static const String walkshareSchedule = '/walkshare-schedule';
+  static const String walkshareProfile = '/walkshare-profile';
+  static const String walkshareDocuments = '/walkshare-documents';
+  static const String walkshareReviews = '/walkshare-reviews';
+  static const String walkshareActiveTrip = '/walkshare-active-trip';
   static const String allTrips = '/all-trips';
   static const String notifications = '/notifications';
   static const String chat = '/chat';
@@ -79,6 +127,9 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String privacyPolicy = '/privacy-policy';
   static const String termsOfServices = '/terms-of-services';
+  static const String termsOfService = termsOfServices;
+  static const String about = '/about';
+  static const String sos = '/sos';
   static const String test = '/test';
 
   static List<GetPage<dynamic>> routes = [
@@ -104,6 +155,29 @@ class AppRoutes {
     GetPage(name: availableProviders, page: () => const AvailableProvidersScreen()),
     GetPage(name: driverProfile, page: () => const DriverProfileScreen()),
     GetPage(name: bookingSummary, page: () => const BookingSummaryScreen()),
+    GetPage(name: tripDetails, page: () => const GuardianTripDetailsScreen()),
+    GetPage(name: guardianLiveTrack, page: () => const GuardianLiveTrackScreen()),
+    GetPage(name: driverLicence, page: () => const DriverLicenceScreen()),
+    GetPage(name: driverVehicleDetails, page: () => const VehicleDetailsScreen()),
+    GetPage(name: driverVehicleInfo, page: () => const DriverVehicleInfoScreen()),
+    GetPage(name: driverDocuments, page: () => const DriverDocumentsScreen()),
+    GetPage(name: documentDetails, page: () => const DocumentDetailsScreen()),
+    GetPage(name: driverHome, page: () => const DriverHomeScreen()),
+    GetPage(name: driverRequests, page: () => const DriverRequestsScreen()),
+    GetPage(name: driverRequestDetails, page: () => const DriverRequestDetailsScreen()),
+    GetPage(name: driverSchedule, page: () => const DriverScheduleScreen()),
+    GetPage(name: driverActiveTrip, page: () => const DriverActiveTripScreen()),
+    GetPage(name: driverAccountProfile, page: () => const DriverRoleProfileScreen()),
+    GetPage(name: driverAvailability, page: () => const DriverAvailabilityScreen()),
+    GetPage(name: walkshareVerification, page: () => const WalkshareVerificationScreen()),
+    GetPage(name: walkshareHome, page: () => const WalkshareHomeScreen()),
+    GetPage(name: walkshareRequests, page: () => const WalkshareRequestsScreen()),
+    GetPage(name: walkshareRequestDetails, page: () => const WalkshareRequestDetailsScreen()),
+    GetPage(name: walkshareSchedule, page: () => const WalkshareScheduleScreen()),
+    GetPage(name: walkshareProfile, page: () => const WalkshareProfileScreen()),
+    GetPage(name: walkshareDocuments, page: () => const WalkshareDocumentsScreen()),
+    GetPage(name: walkshareReviews, page: () => const WalkshareReviewsScreen()),
+    GetPage(name: walkshareActiveTrip, page: () => const WalkshareActiveWalkScreen()),
     GetPage(name: allTrips, page: () => const GuardianBookingScreen()),
     GetPage(name: notifications, page: () => const NotificationScreen()),
     GetPage(name: chat, page: () => const ChatListScreen()),
@@ -140,5 +214,7 @@ class AppRoutes {
     GetPage(name: settings, page: () => const SettingScreen()),
     GetPage(name: privacyPolicy, page: () => const PrivacyPolicyScreen()),
     GetPage(name: termsOfServices, page: () => const TermsOfServiceScreen()),
+    GetPage(name: about, page: () => const AboutScreen()),
+    GetPage(name: sos, page: () => const SosScreen()),
   ];
 }

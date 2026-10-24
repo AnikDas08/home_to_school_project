@@ -135,7 +135,7 @@ class GuardianQuickActionsWidget extends StatelessWidget {
             /// Safety & Help Card
             Expanded(
               child: GestureDetector(
-                onTap: onSafetyHelp ?? () {},
+                onTap: onSafetyHelp ?? () => Get.toNamed(AppRoutes.contactSupport),
                 behavior: HitTestBehavior.opaque,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 18.h),

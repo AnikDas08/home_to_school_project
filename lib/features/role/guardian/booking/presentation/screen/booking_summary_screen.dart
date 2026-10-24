@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/features/common/nav_screen/controller/nav_controller.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/controller/available_providers_controller.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
@@ -104,14 +105,27 @@ class BookingSummaryScreen extends StatelessWidget {
               /// 4. Send Booking Request Button
               GestureDetector(
                 onTap: () {
+                  // 1. Switch bottom nav to Bookings tab (index 1)
+                  if (Get.isRegistered<NavController>()) {
+                    Get.find<NavController>().changeIndex(1);
+                  }
+
+                  // 2. Safely pop back to NavScreen (never pops past root route)
+                  if (Navigator.of(context).canPop()) {
+                    Get.until((route) =>
+                        route.settings.name == AppRoutes.navScreen ||
+                        route.settings.name == AppRoutes.homeNav ||
+                        route.isFirst);
+                  } else {
+                    Get.offAllNamed(AppRoutes.navScreen);
+                  }
+
+                  // 3. Show success notification on the destination screen
                   AppSnackbar.success(
                     title: 'Request Sent',
                     message:
                         'Your booking request was sent to ${driver.name}. You will be notified once accepted.',
                   );
-                  Future.delayed(const Duration(milliseconds: 1200), () {
-                    Get.until((route) => route.settings.name == AppRoutes.bookings || route.settings.name == AppRoutes.home);
-                  });
                 },
                 behavior: HitTestBehavior.opaque,
                 child: Container(

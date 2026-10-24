@@ -41,10 +41,49 @@ class ForgetPasswordController extends GetxController {
   static const int _otpDurationSeconds = 180;
   int remainingSeconds = 0;
   Timer? _timer;
-  final emailController = TextEditingController();
-  final otpController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController get emailController {
+    try {
+      final _ = _emailController.value;
+      return _emailController;
+    } catch (_) {
+      _emailController = TextEditingController();
+      return _emailController;
+    }
+  }
+
+  TextEditingController _otpController = TextEditingController();
+  TextEditingController get otpController {
+    try {
+      final _ = _otpController.value;
+      return _otpController;
+    } catch (_) {
+      _otpController = TextEditingController();
+      return _otpController;
+    }
+  }
+
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController get passwordController {
+    try {
+      final _ = _passwordController.value;
+      return _passwordController;
+    } catch (_) {
+      _passwordController = TextEditingController();
+      return _passwordController;
+    }
+  }
+
+  TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController get confirmPasswordController {
+    try {
+      final _ = _confirmPasswordController.value;
+      return _confirmPasswordController;
+    } catch (_) {
+      _confirmPasswordController = TextEditingController();
+      return _confirmPasswordController;
+    }
+  }
 
   bool get canResendOtp => remainingSeconds == 0;
 
@@ -109,10 +148,6 @@ class ForgetPasswordController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
-    emailController.dispose();
-    otpController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
     super.onClose();
   }
 }

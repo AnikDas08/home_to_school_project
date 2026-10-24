@@ -30,7 +30,19 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     final userJson = data['attributes'] ?? data['user'] ?? data;
-    return UserModel.fromJson(userJson);
+    final userModel = UserModel.fromJson(userJson);
+
+    // Save user's role and credentials from database into LocalStorage
+    final String? roleFromDb = userModel.role ?? userJson['role'];
+    if (roleFromDb != null && roleFromDb.isNotEmpty) {
+      await LocalStorage.saveRole(roleFromDb);
+    }
+    if (userModel.name != null && userModel.name!.isNotEmpty) {
+      await LocalStorage.setString(LocalStorageKeys.myName, userModel.name!);
+    }
+    await LocalStorage.setBool(LocalStorageKeys.isLogIn, true);
+
+    return userModel;
   }
 
   @override

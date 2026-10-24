@@ -43,21 +43,6 @@ class GuardianBookingScreen extends StatelessWidget {
           fontWeight: FontWeight.w700,
           color: Color(0xFF0F172A),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.toNamed(AppRoutes.bookRide),
-            style: TextButton.styleFrom(
-              splashFactory: NoSplash.splashFactory,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-            ),
-            child: const CommonText(
-              text: 'New',
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFFEA580C),
-            ),
-          ),
-        ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(
@@ -210,7 +195,13 @@ class GuardianBookingScreen extends StatelessWidget {
           ),
 
           /// Active Trip Cards
-          ...active.map((b) => GuardianBookingCard(booking: b)),
+          ...active.map(
+            (b) => GuardianBookingCard(
+              booking: b,
+              onTap: () => Get.toNamed(AppRoutes.tripDetails),
+              onTrack: () => Get.toNamed(AppRoutes.guardianLiveTrack),
+            ),
+          ),
 
           14.height,
 
@@ -236,7 +227,12 @@ class GuardianBookingScreen extends StatelessWidget {
           ),
 
           /// Scheduled Commutes Cards
-          ...scheduled.map((b) => GuardianBookingCard(booking: b)),
+          ...scheduled.map(
+            (b) => GuardianBookingCard(
+              booking: b,
+              onTap: () => Get.toNamed(AppRoutes.tripDetails),
+            ),
+          ),
         ],
       ),
     );
@@ -251,7 +247,10 @@ class GuardianBookingScreen extends StatelessWidget {
       padding: EdgeInsets.only(top: 8.h, bottom: 24.h),
       itemCount: list.length,
       itemBuilder: (context, index) {
-        return GuardianBookingCard(booking: list[index]);
+        return GuardianBookingCard(
+          booking: list[index],
+          onTap: () => Get.toNamed(AppRoutes.tripDetails),
+        );
       },
     );
   }
@@ -265,7 +264,10 @@ class GuardianBookingScreen extends StatelessWidget {
       padding: EdgeInsets.only(top: 8.h, bottom: 24.h),
       itemCount: list.length,
       itemBuilder: (context, index) {
-        return GuardianBookingCard(booking: list[index]);
+        return GuardianBookingCard(
+          booking: list[index],
+          onTap: () => Get.toNamed(AppRoutes.tripDetails),
+        );
       },
     );
   }

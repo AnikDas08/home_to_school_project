@@ -41,7 +41,7 @@ class GuardianSafeRideBanner extends StatelessWidget {
             left: 0,
             top: 0,
             bottom: 0,
-            width: 200.w,
+            width: 230.w,
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -53,47 +53,65 @@ class GuardianSafeRideBanner extends StatelessWidget {
                     Colors.white.withOpacity(0.85),
                     Colors.white.withOpacity(0.0),
                   ],
-                  stops: const [0.0, 0.50, 0.75, 1.0],
+                  stops: const [0.0, 0.55, 0.80, 1.0],
                 ),
               ),
             ),
           ),
 
-          /// Typography content over the left section
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CommonText(
-                  text: 'Safe Ride',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF0F172A),
-                  textAlign: TextAlign.start,
+          /// Typography content over the left section with responsive scaling
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final maxTextWidth = constraints.maxWidth * 0.58;
+
+                    return SizedBox(
+                      width: maxTextWidth,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CommonText(
+                              text: 'Safe Ride',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF0F172A),
+                              textAlign: TextAlign.start,
+                            ),
+                            2.height,
+                            const CommonText(
+                              text: 'Brighter Future',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFEA580C),
+                              textAlign: TextAlign.start,
+                            ),
+                            6.height,
+                            SizedBox(
+                              width: maxTextWidth,
+                              child: const CommonText(
+                                text: "Trusted school transport for your child's everyday journey",
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF475569),
+                                textAlign: TextAlign.start,
+                                maxLines: 3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                2.height,
-                const CommonText(
-                  text: 'Brighter Future',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFFEA580C),
-                  textAlign: TextAlign.start,
-                ),
-                8.height,
-                SizedBox(
-                  width: 145.w,
-                  child: const CommonText(
-                    text: "Trusted school transport for your child's everyday journey",
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF475569),
-                    textAlign: TextAlign.start,
-                    maxLines: 3,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],

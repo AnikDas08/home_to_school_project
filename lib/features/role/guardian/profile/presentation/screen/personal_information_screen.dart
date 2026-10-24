@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/controller/driver_role_profile_controller.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/controller/guardian_profile_controller.dart';
+import 'package:home_to_school/services/storage/storage_keys.dart';
 import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/constants/app_images.dart';
@@ -23,6 +27,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _addressController;
 
+  File? _pickedImage;
+  final ImagePicker _picker = ImagePicker();
+
   String _selectedRelationship = 'Mother';
   final List<String> _relationships = [
     'Mother',
@@ -36,19 +43,37 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   void initState() {
     super.initState();
     String initialName = 'Sadia Khan';
-    if (Get.isRegistered<GuardianProfileController>() &&
-        Get.find<GuardianProfileController>().name.isNotEmpty) {
-      initialName = Get.find<GuardianProfileController>().name;
-    } else if (LocalStorage.myName.isNotEmpty) {
-      initialName = LocalStorage.myName;
+    final isDriverRole = LocalStorage.role.toLowerCase() == 'driver' ||
+        LocalStorage.role.toLowerCase() == 'walkshare';
+
+    if (isDriverRole) {
+      if (Get.isRegistered<DriverRoleProfileController>() &&
+          Get.find<DriverRoleProfileController>().name.isNotEmpty) {
+        initialName = Get.find<DriverRoleProfileController>().name;
+      } else if (LocalStorage.myName.isNotEmpty) {
+        initialName = LocalStorage.myName;
+      } else {
+        initialName = 'Robert MacDonald';
+      }
+    } else {
+      if (Get.isRegistered<GuardianProfileController>() &&
+          Get.find<GuardianProfileController>().name.isNotEmpty) {
+        initialName = Get.find<GuardianProfileController>().name;
+      } else if (LocalStorage.myName.isNotEmpty) {
+        initialName = LocalStorage.myName;
+      }
     }
+
+    final defaultEmail = isDriverRole
+        ? 'robert.macdonald@example.com'
+        : 'sadia.khan@example.com';
 
     _nameController = TextEditingController(text: initialName);
     _phoneController = TextEditingController(text: '(416) 555-0192');
     _emailController = TextEditingController(
       text: LocalStorage.myEmail.isNotEmpty
           ? LocalStorage.myEmail
-          : 'sadia.khan@example.com',
+          : defaultEmail,
     );
     _addressController =
         TextEditingController(text: '12 Elm Street, Toronto, ON');
@@ -67,14 +92,289 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     super.dispose();
   }
 
+  /// Pick image from Gallery or Camera
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        setState(() {
+          _pickedImage = File(image.path);
+        });
+      }
+    } catch (e) {
+      AppSnackbar.error(
+        title: 'Error',
+        message: 'Failed to pick image: $e',
+      );
+    }
+  }
+
+  /// Bottom sheet to choose between Gallery, Camera, or Remove
+  void _showImageSourceBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(24.r),
+            ),
+          ),
+          padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 28.h),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// Drag handle
+                Container(
+                  width: 40.w,
+                  height: 4.h,
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCBD5E1),
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+
+                /// Title & subtitle
+                const CommonText(
+                  text: 'Change Profile Photo',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+                4.height,
+                const CommonText(
+                  text: 'Select an image from gallery or take a new photo',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF64748B),
+                  textAlign: TextAlign.center,
+                ),
+
+                20.height,
+
+                /// Choose from Gallery
+                _buildImageSourceTile(
+                  icon: Icons.photo_library_rounded,
+                  iconColor: const Color(0xFF1B2B68),
+                  bgColor: const Color(0xFFEFF6FF),
+                  title: 'Choose from Gallery',
+                  subtitle: 'Select an existing photo from your library',
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _pickImage(ImageSource.gallery);
+                  },
+                ),
+
+                12.height,
+
+                /// Take a Photo
+                _buildImageSourceTile(
+                  icon: Icons.camera_alt_rounded,
+                  iconColor: const Color(0xFF10B981),
+                  bgColor: const Color(0xFFECFDF5),
+                  title: 'Take a Photo',
+                  subtitle: 'Use your camera to capture a new photo',
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    _pickImage(ImageSource.camera);
+                  },
+                ),
+
+                if (_pickedImage != null || LocalStorage.myImage.isNotEmpty) ...[
+                  12.height,
+
+                  /// Remove Current Photo
+                  _buildImageSourceTile(
+                    icon: Icons.delete_outline_rounded,
+                    iconColor: const Color(0xFFEF4444),
+                    bgColor: const Color(0xFFFEF2F2),
+                    title: 'Remove Current Photo',
+                    subtitle: 'Reset to the default profile avatar',
+                    onTap: () {
+                      Navigator.of(ctx).pop();
+                      setState(() {
+                        _pickedImage = null;
+                      });
+                      LocalStorage.myImage = '';
+                      LocalStorage.image = '';
+                      LocalStorage.setString(LocalStorageKeys.myImage, '');
+                      if (Get.isRegistered<DriverRoleProfileController>()) {
+                        Get.find<DriverRoleProfileController>().update();
+                      }
+                      if (Get.isRegistered<GuardianProfileController>()) {
+                        Get.find<GuardianProfileController>().update();
+                      }
+                    },
+                  ),
+                ],
+
+                16.height,
+
+                /// Cancel button
+                GestureDetector(
+                  onTap: () => Navigator.of(ctx).pop(),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 13.h),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    alignment: Alignment.center,
+                    child: const CommonText(
+                      text: 'Cancel',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF64748B),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildImageSourceTile({
+    required IconData icon,
+    required Color iconColor,
+    required Color bgColor,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(
+            color: const Color(0xFFE2E8F0),
+            width: 1.0,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.r),
+              decoration: BoxDecoration(
+                color: bgColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 20.sp,
+              ),
+            ),
+            14.width,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CommonText(
+                    text: title,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF0F172A),
+                  ),
+                  2.height,
+                  CommonText(
+                    text: subtitle,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF64748B),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: const Color(0xFF94A3B8),
+              size: 20.sp,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Avatar image renderer supporting newly picked image, cached LocalStorage file, or fallback asset
+  Widget _buildAvatarImage(double width, double height) {
+    if (_pickedImage != null) {
+      return Image.file(
+        _pickedImage!,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      );
+    }
+    if (LocalStorage.myImage.isNotEmpty) {
+      final file = File(LocalStorage.myImage);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          width: width,
+          height: height,
+          fit: BoxFit.cover,
+        );
+      }
+    }
+    return Image.asset(
+      AppImages.profileImage,
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => CircleAvatar(
+        radius: (width / 2).r,
+        backgroundColor: const Color(0xFFEFF6FF),
+        child: Icon(
+          Icons.person,
+          size: 40.sp,
+          color: const Color(0xFF1B2B68),
+        ),
+      ),
+    );
+  }
+
   void _onSaveChanges() {
     final newName = _nameController.text.trim();
     if (newName.isNotEmpty) {
       LocalStorage.myName = newName;
+      LocalStorage.setString(LocalStorageKeys.myName, newName);
     }
     final newEmail = _emailController.text.trim();
     if (newEmail.isNotEmpty) {
       LocalStorage.myEmail = newEmail;
+      LocalStorage.setString(LocalStorageKeys.myEmail, newEmail);
+    }
+
+    if (_pickedImage != null) {
+      LocalStorage.myImage = _pickedImage!.path;
+      LocalStorage.image = _pickedImage!.path;
+      LocalStorage.setString(LocalStorageKeys.myImage, _pickedImage!.path);
+    }
+
+    if (Get.isRegistered<DriverRoleProfileController>()) {
+      final driverCtrl = Get.find<DriverRoleProfileController>();
+      if (newName.isNotEmpty) {
+        driverCtrl.name = newName;
+      }
+      driverCtrl.update();
     }
 
     if (Get.isRegistered<GuardianProfileController>()) {
@@ -139,50 +439,65 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: Column(
                   children: [
-                    /// Avatar with Camera Edit Badge
+                    /// Avatar with Camera Edit Badge (interactive)
                     Center(
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(44.r),
-                            child: Image.asset(
-                              AppImages.profileImage,
+                      child: GestureDetector(
+                        onTap: _showImageSourceBottomSheet,
+                        behavior: HitTestBehavior.opaque,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
                               width: 86.w,
                               height: 86.w,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => CircleAvatar(
-                                radius: 43.r,
-                                backgroundColor: const Color(0xFFEFF6FF),
-                                child: Icon(
-                                  Icons.person,
-                                  size: 40.sp,
-                                  color: const Color(0xFF1B2B68),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(6.r),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF1B2B68),
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: Colors.white,
-                                  width: 2.5.w,
+                                  color: const Color(0xFFE2E8F0),
+                                  width: 2.w,
                                 ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x0A0F172A),
+                                    blurRadius: 10,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              child: Icon(
-                                Icons.camera_alt_rounded,
-                                size: 13.sp,
-                                color: Colors.white,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(44.r),
+                                child: _buildAvatarImage(86.w, 86.w),
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                padding: EdgeInsets.all(7.r),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1B2B68),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2.5.w,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x251B2B68),
+                                      blurRadius: 6,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 14.sp,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 

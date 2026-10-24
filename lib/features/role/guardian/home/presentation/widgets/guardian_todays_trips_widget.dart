@@ -55,7 +55,7 @@ class GuardianTodaysTripsWidget extends StatelessWidget {
         14.height,
 
         /// Trip Card 1 (One-way)
-        const GuardianTripCard(
+        GuardianTripCard(
           month: 'MAY',
           day: '22',
           weekday: 'Wed',
@@ -63,12 +63,13 @@ class GuardianTodaysTripsWidget extends StatelessWidget {
           pickupAddress: '9 Harbourview Lane',
           destinationAddress: 'Greenfield International',
           badgeType: TripBadgeType.oneWay,
+          onTap: () => Get.toNamed(AppRoutes.tripDetails),
         ),
 
         12.height,
 
         /// Trip Card 2 (Round Trip)
-        const GuardianTripCard(
+        GuardianTripCard(
           month: 'MAY',
           day: '22',
           weekday: 'Wed',
@@ -76,12 +77,13 @@ class GuardianTodaysTripsWidget extends StatelessWidget {
           pickupAddress: '9 Harbourview Lane',
           destinationAddress: 'Greenfield International',
           badgeType: TripBadgeType.roundTrip,
+          onTap: () => Get.toNamed(AppRoutes.tripDetails),
         ),
 
         12.height,
 
         /// Trip Card 3 (Round Trip)
-        const GuardianTripCard(
+        GuardianTripCard(
           month: 'MAY',
           day: '24',
           weekday: 'Wed',
@@ -89,6 +91,7 @@ class GuardianTodaysTripsWidget extends StatelessWidget {
           pickupAddress: '9 Harbourview Lane',
           destinationAddress: 'Greenfield International',
           badgeType: TripBadgeType.roundTrip,
+          onTap: () => Get.toNamed(AppRoutes.tripDetails),
         ),
       ],
     );

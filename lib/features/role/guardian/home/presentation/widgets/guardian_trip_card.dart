@@ -14,6 +14,7 @@ class GuardianTripCard extends StatelessWidget {
   final String pickupAddress;
   final String destinationAddress;
   final TripBadgeType badgeType;
+  final VoidCallback? onTap;
 
   const GuardianTripCard({
     super.key,
@@ -24,13 +25,14 @@ class GuardianTripCard extends StatelessWidget {
     required this.pickupAddress,
     required this.destinationAddress,
     required this.badgeType,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final isOneWay = badgeType == TripBadgeType.oneWay;
 
-    return Container(
+    final cardContent = Container(
       width: double.infinity,
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -219,5 +221,15 @@ class GuardianTripCard extends StatelessWidget {
         ],
       ),
     );
+
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: cardContent,
+      );
+    }
+
+    return cardContent;
   }
 }

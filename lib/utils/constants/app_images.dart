@@ -12,4 +12,7 @@ class AppImages {
   static const String profileImage = '$baseurl/profile_image.jpg';
   static const String safeRideBanner = '$baseurl/safe_ride_banner.jpg';
   static const String homeScreenBackground = '$baseurl/home_screen_background.png';
+  static const String mapImageShow = '$baseurl/mapimage_show.png';
+  static const String pickupProofPhoto = '$baseurl/pickup_proof_photo.png';
+  static const String childSeatedPhoto = pickupProofPhoto;
 }

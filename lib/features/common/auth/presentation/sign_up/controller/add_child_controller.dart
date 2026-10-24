@@ -8,9 +8,38 @@ import 'package:home_to_school/utils/helpers/other_helper.dart';
 class AddChildController extends GetxController {
   static AddChildController get instance => Get.find<AddChildController>();
 
-  final nameController = TextEditingController();
-  final schoolController = TextEditingController();
-  final gradeController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController get nameController {
+    try {
+      final _ = _nameController.value;
+      return _nameController;
+    } catch (_) {
+      _nameController = TextEditingController();
+      return _nameController;
+    }
+  }
+
+  TextEditingController _schoolController = TextEditingController();
+  TextEditingController get schoolController {
+    try {
+      final _ = _schoolController.value;
+      return _schoolController;
+    } catch (_) {
+      _schoolController = TextEditingController();
+      return _schoolController;
+    }
+  }
+
+  TextEditingController _gradeController = TextEditingController();
+  TextEditingController get gradeController {
+    try {
+      final _ = _gradeController.value;
+      return _gradeController;
+    } catch (_) {
+      _gradeController = TextEditingController();
+      return _gradeController;
+    }
+  }
 
   String? image;
   bool isLoading = false;
@@ -69,9 +98,6 @@ class AddChildController extends GetxController {
 
   @override
   void onClose() {
-    nameController.dispose();
-    schoolController.dispose();
-    gradeController.dispose();
     super.onClose();
   }
 }

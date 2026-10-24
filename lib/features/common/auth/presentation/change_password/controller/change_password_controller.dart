@@ -4,9 +4,38 @@ import 'package:home_to_school/utils/app_snackbar.dart';
 
 class ChangePasswordController extends GetxController {
   bool isLoading = false;
-  final currentPasswordController = TextEditingController();
-  final newPasswordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  TextEditingController _currentPasswordController = TextEditingController();
+  TextEditingController get currentPasswordController {
+    try {
+      final _ = _currentPasswordController.value;
+      return _currentPasswordController;
+    } catch (_) {
+      _currentPasswordController = TextEditingController();
+      return _currentPasswordController;
+    }
+  }
+
+  TextEditingController _newPasswordController = TextEditingController();
+  TextEditingController get newPasswordController {
+    try {
+      final _ = _newPasswordController.value;
+      return _newPasswordController;
+    } catch (_) {
+      _newPasswordController = TextEditingController();
+      return _newPasswordController;
+    }
+  }
+
+  TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController get confirmPasswordController {
+    try {
+      final _ = _confirmPasswordController.value;
+      return _confirmPasswordController;
+    } catch (_) {
+      _confirmPasswordController = TextEditingController();
+      return _confirmPasswordController;
+    }
+  }
 
   Future<void> changePassword() async {
     if (isLoading) return;
@@ -29,9 +58,6 @@ class ChangePasswordController extends GetxController {
 
   @override
   void onClose() {
-    currentPasswordController.dispose();
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
     super.onClose();
   }
 }

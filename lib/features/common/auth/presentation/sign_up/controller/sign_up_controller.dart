@@ -32,12 +32,71 @@ class SignUpController extends GetxController {
   Timer? _timer;
   int _seconds = 25;
 
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final numberController = TextEditingController();
-  final otpController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController get nameController {
+    try {
+      final _ = _nameController.value;
+      return _nameController;
+    } catch (_) {
+      _nameController = TextEditingController();
+      return _nameController;
+    }
+  }
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController get emailController {
+    try {
+      final _ = _emailController.value;
+      return _emailController;
+    } catch (_) {
+      _emailController = TextEditingController();
+      return _emailController;
+    }
+  }
+
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController get passwordController {
+    try {
+      final _ = _passwordController.value;
+      return _passwordController;
+    } catch (_) {
+      _passwordController = TextEditingController();
+      return _passwordController;
+    }
+  }
+
+  TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController get confirmPasswordController {
+    try {
+      final _ = _confirmPasswordController.value;
+      return _confirmPasswordController;
+    } catch (_) {
+      _confirmPasswordController = TextEditingController();
+      return _confirmPasswordController;
+    }
+  }
+
+  TextEditingController _numberController = TextEditingController();
+  TextEditingController get numberController {
+    try {
+      final _ = _numberController.value;
+      return _numberController;
+    } catch (_) {
+      _numberController = TextEditingController();
+      return _numberController;
+    }
+  }
+
+  TextEditingController _otpController = TextEditingController();
+  TextEditingController get otpController {
+    try {
+      final _ = _otpController.value;
+      return _otpController;
+    } catch (_) {
+      _otpController = TextEditingController();
+      return _otpController;
+    }
+  }
 
   String get time {
     final minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
@@ -112,12 +171,22 @@ class SignUpController extends GetxController {
   Future<void> verifyOtp() async {
     final storedRole = LocalStorage.role.toLowerCase();
     final currentRole = selectRole.toLowerCase();
+    final isDriver = storedRole.contains('driver') ||
+        currentRole.contains('driver') ||
+        storedRole.contains('carpool') ||
+        currentRole.contains('carpool');
+    final isWalkShare = storedRole.contains('walk') ||
+        currentRole.contains('walk');
     final isGuardian = storedRole.contains('parent') ||
         storedRole.contains('guardian') ||
         currentRole.contains('parent') ||
         currentRole.contains('guardian');
 
-    if (isGuardian) {
+    if (isDriver) {
+      Get.toNamed(AppRoutes.driverLicence);
+    } else if (isWalkShare) {
+      Get.toNamed(AppRoutes.walkshareVerification);
+    } else if (isGuardian) {
       Get.toNamed(AppRoutes.addChild);
     } else {
       Get.offAllNamed(AppRoutes.signIn);
@@ -127,12 +196,6 @@ class SignUpController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    numberController.dispose();
-    otpController.dispose();
     super.onClose();
   }
 }

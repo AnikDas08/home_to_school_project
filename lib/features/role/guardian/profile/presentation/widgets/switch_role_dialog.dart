@@ -3,7 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/features/common/nav_screen/controller/nav_controller.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/controller/driver_role_profile_controller.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/controller/guardian_profile_controller.dart';
+import 'package:home_to_school/features/role/walkshare/profile/presentation/controller/walkshare_profile_controller.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -28,23 +33,117 @@ class _SwitchRoleDialogState extends State<SwitchRoleDialog> {
   @override
   void initState() {
     super.initState();
-    if (Get.isRegistered<GuardianProfileController>()) {
+    if (LocalStorage.role.isNotEmpty) {
+      _activeRole = LocalStorage.role;
+    } else if (Get.isRegistered<GuardianProfileController>()) {
       _activeRole = Get.find<GuardianProfileController>().activeRole;
     }
   }
 
-  void _onSelectRole(String role) {
+  Future<void> _onSelectRole(String role) async {
+    final currentStored = LocalStorage.role.isNotEmpty
+        ? LocalStorage.role
+        : (LocalStorage.myRole.isNotEmpty ? LocalStorage.myRole : 'Parent');
+
+    // Check if user tapped already active role
+    final isSame = (role == 'Parent' &&
+            (currentStored == 'Parent' || currentStored == 'Guardian')) ||
+        (role.contains('Driver') && currentStored.contains('Driver')) ||
+        (role.contains('Walk') && currentStored.contains('Walk'));
+
+    if (isSame) {
+      if (mounted) Navigator.pop(context);
+      return;
+    }
+
     setState(() {
       _activeRole = role;
     });
 
+    // Close the SwitchRoleDialog modal
+    if (mounted) {
+      Navigator.pop(context);
+    }
+
+    // Show platform-default adaptive progress bar dialog (iOS Cupertino / Android Material)
+    Get.dialog(
+      PopScope(
+        canPop: false,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 26.w, vertical: 22.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.12),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  /// Default iOS Cupertino and Android Material progress indicator
+                  const CircularProgressIndicator.adaptive(),
+                  16.height,
+                  CommonText(
+                    text: 'Switching to $role...',
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF0F172A),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+
+    // Save selected role synchronously and asynchronously to SharedPreferences
+    await LocalStorage.saveRole(role);
+    LocalStorage.role = role;
+    LocalStorage.myRole = role;
+
+    // Small delay to allow the default platform progressbar animation to complete smoothly
+    await Future.delayed(const Duration(milliseconds: 650));
+
+    // Update NavController with the new role and reset to Home tab (index 0)
+    if (Get.isRegistered<NavController>()) {
+      await Get.find<NavController>().switchRole(role);
+    }
+
+    // Update all registered role profile controllers
     if (Get.isRegistered<GuardianProfileController>()) {
       final profileCtrl = Get.find<GuardianProfileController>();
       profileCtrl.activeRole = role;
       profileCtrl.update();
     }
+    if (Get.isRegistered<DriverRoleProfileController>()) {
+      final driverCtrl = Get.find<DriverRoleProfileController>();
+      driverCtrl.activeRole = role;
+      driverCtrl.update();
+    }
+    if (Get.isRegistered<WalkshareProfileController>()) {
+      final walkCtrl = Get.find<WalkshareProfileController>();
+      walkCtrl.activeRole = role;
+      walkCtrl.update();
+    }
 
-    Navigator.pop(context);
+    // Dismiss the adaptive progress indicator dialog
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
+
+    // Navigate cleanly to NavScreen with the switched role
+    Get.offAllNamed(AppRoutes.navScreen);
 
     AppSnackbar.success(
       title: 'Role Switched',

@@ -9,6 +9,12 @@ import 'package:home_to_school/features/role/guardian/home/presentation/screen/a
 import 'package:home_to_school/features/role/guardian/home/presentation/screen/home_screen.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/screen/guardian_profile_screen.dart';
 import 'package:home_to_school/features/message/presentation/chat_list/screen/chat_screen.dart';
+import 'package:home_to_school/features/role/driver/home/presentation/screen/driver_home_screen.dart';
+import 'package:home_to_school/features/role/driver/schedule/presentation/screen/driver_schedule_screen.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_role_profile_screen.dart';
+import 'package:home_to_school/features/role/walkshare/home/presentation/screen/walkshare_home_screen.dart';
+import 'package:home_to_school/features/role/walkshare/schedule/presentation/screen/walkshare_schedule_screen.dart';
+import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_profile_screen.dart';
 import 'package:home_to_school/features/profile/presentation/screen/profile_screen.dart';
 import 'package:home_to_school/services/storage/storage_services.dart';
 
@@ -26,35 +32,64 @@ class _RoleNavItem {
   });
 }
 
-class NavScreen extends StatelessWidget {
+class NavScreen extends StatefulWidget {
   const NavScreen({super.key});
 
-  /// Check active role
+  @override
+  State<NavScreen> createState() => _NavScreenState();
+}
+
+class _NavScreenState extends State<NavScreen> {
+  String _activeRole = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    await LocalStorage.getAllPrefData();
+    if (mounted) {
+      setState(() {
+        _activeRole = LocalStorage.role.isNotEmpty
+            ? LocalStorage.role
+            : LocalStorage.myRole;
+      });
+    }
+  }
+
+  /// Check active role stored in database / SharedPreferences
   String get _currentRole {
-    final role = LocalStorage.role.isNotEmpty
-        ? LocalStorage.role
-        : LocalStorage.myRole;
+    final role = _activeRole.isNotEmpty
+        ? _activeRole
+        : (LocalStorage.role.isNotEmpty
+            ? LocalStorage.role
+            : LocalStorage.myRole);
     return role.toLowerCase();
   }
 
   bool get _isDriver => _currentRole.contains('driver');
   bool get _isWalkShare => _currentRole.contains('walk');
 
-  /// Generate items based on role
-  List<_RoleNavItem> _getNavItems() {
-    if (_isDriver) {
+  List<_RoleNavItem> _getNavItems([String? activeRole]) {
+    final role = (activeRole ?? _currentRole).toLowerCase();
+    final isDriver = role.contains('driver');
+    final isWalkShare = role.contains('walk');
+
+    if (isDriver) {
       return const [
         _RoleNavItem(
           label: 'Home',
-          activeIcon: Icons.directions_bus_rounded,
-          inactiveIcon: Icons.directions_bus_outlined,
-          screen: HomeScreen(),
+          activeIcon: Icons.home_rounded,
+          inactiveIcon: Icons.home_outlined,
+          screen: DriverHomeScreen(),
         ),
         _RoleNavItem(
-          label: 'Routes',
-          activeIcon: Icons.alt_route_rounded,
-          inactiveIcon: Icons.alt_route_outlined,
-          screen: AllTripsScreen(isTab: true),
+          label: 'Schedule',
+          activeIcon: Icons.calendar_month_rounded,
+          inactiveIcon: Icons.calendar_month_outlined,
+          screen: DriverScheduleScreen(isTab: true),
         ),
         _RoleNavItem(
           label: 'Messages',
@@ -66,22 +101,24 @@ class NavScreen extends StatelessWidget {
           label: 'Profile',
           activeIcon: Icons.person_rounded,
           inactiveIcon: Icons.person_outline_rounded,
-          screen: ProfileScreen(),
+          screen: DriverRoleProfileScreen(isTab: true),
         ),
       ];
-    } else if (_isWalkShare) {
+    }
+
+    if (isWalkShare) {
       return const [
         _RoleNavItem(
           label: 'Home',
-          activeIcon: Icons.directions_walk_rounded,
-          inactiveIcon: Icons.directions_walk_outlined,
-          screen: HomeScreen(),
+          activeIcon: Icons.home_rounded,
+          inactiveIcon: Icons.home_outlined,
+          screen: WalkshareHomeScreen(),
         ),
         _RoleNavItem(
-          label: 'Walks',
-          activeIcon: Icons.map_rounded,
-          inactiveIcon: Icons.map_outlined,
-          screen: AllTripsScreen(isTab: true),
+          label: 'Schedule',
+          activeIcon: Icons.calendar_month_rounded,
+          inactiveIcon: Icons.calendar_month_outlined,
+          screen: WalkshareScheduleScreen(isTab: true),
         ),
         _RoleNavItem(
           label: 'Messages',
@@ -93,7 +130,7 @@ class NavScreen extends StatelessWidget {
           label: 'Profile',
           activeIcon: Icons.person_rounded,
           inactiveIcon: Icons.person_outline_rounded,
-          screen: ProfileScreen(),
+          screen: WalkshareProfileScreen(isTab: true),
         ),
       ];
     }
@@ -129,15 +166,23 @@ class NavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navItems = _getNavItems();
     final controller = Get.put(NavController());
 
     return GetBuilder<NavController>(
-      builder: (_) {
+      builder: (navCtrl) {
+        final role = navCtrl.currentRole.isNotEmpty
+            ? navCtrl.currentRole
+            : (LocalStorage.role.isNotEmpty
+                ? LocalStorage.role
+                : (LocalStorage.myRole.isNotEmpty
+                    ? LocalStorage.myRole
+                    : 'Parent'));
+        final navItems = _getNavItems(role);
+
         // Guard against out-of-bounds if role switches
-        final activeIndex = controller.selectedIndex >= navItems.length
+        final activeIndex = navCtrl.selectedIndex >= navItems.length
             ? 0
-            : controller.selectedIndex;
+            : navCtrl.selectedIndex;
 
         return Scaffold(
           backgroundColor: Colors.white,

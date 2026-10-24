@@ -195,75 +195,67 @@ class SignInScreen extends StatelessWidget {
 
                         24.height,
 
-                        /// Continue with Apple Button
-                        GestureDetector(
-                          onTap: controller.signInWithApple,
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(14.r),
-                              border: Border.all(
-                                color: const Color(0xFFE2E8F0),
-                                width: 1.2,
+                        /// Continue with Apple Button (Non-clickable for now)
+                        Container(
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(
+                              color: const Color(0xFFE2E8F0),
+                              width: 1.2,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/apple_icon.svg',
+                                width: 18.w,
+                                height: 18.h,
                               ),
-                            ),
-                            alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icons/apple_icon.svg',
-                                  width: 18.w,
-                                  height: 18.h,
-                                ),
-                                10.width,
-                                const CommonText(
-                                  text: 'Continue with Apple',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF0F172A),
-                                ),
-                              ],
-                            ),
+                              10.width,
+                              const CommonText(
+                                text: 'Continue with Apple',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF0F172A),
+                              ),
+                            ],
                           ),
                         ),
 
                         12.height,
 
-                        /// Continue with Google Button
-                        GestureDetector(
-                          onTap: controller.signInWithGoogle,
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(14.r),
-                              border: Border.all(
-                                color: const Color(0xFFE2E8F0),
-                                width: 1.2,
+                        /// Continue with Google Button (Non-clickable for now)
+                        Container(
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(
+                              color: const Color(0xFFE2E8F0),
+                              width: 1.2,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/google_icon.svg',
+                                width: 18.w,
+                                height: 18.h,
                               ),
-                            ),
-                            alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icons/google_icon.svg',
-                                  width: 18.w,
-                                  height: 18.h,
-                                ),
-                                10.width,
-                                const CommonText(
-                                  text: 'Continue with Google',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF0F172A),
-                                ),
-                              ],
-                            ),
+                              10.width,
+                              const CommonText(
+                                text: 'Continue with Google',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF0F172A),
+                              ),
+                            ],
                           ),
                         ),
 

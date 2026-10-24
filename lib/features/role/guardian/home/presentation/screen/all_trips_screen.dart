@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/config/route/app_routes.dart';
 import 'package:home_to_school/features/role/guardian/home/presentation/widgets/guardian_trip_card.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -188,6 +189,7 @@ class _AllTripsScreenState extends State<AllTripsScreen> {
                     pickupAddress: trip['pickupAddress'],
                     destinationAddress: trip['destinationAddress'],
                     badgeType: trip['badgeType'],
+                    onTap: () => Get.toNamed(AppRoutes.tripDetails),
                   );
                 },
               ),
