@@ -106,7 +106,7 @@ class ConfirmBoardedBottomSheet extends StatelessWidget {
                         ],
                       ),
 
-                      /// Required badge (Image 1)
+                      /// Optional badge
                       if (!controller.hasProofPhoto.value)
                         Container(
                           padding: EdgeInsets.symmetric(
@@ -114,14 +114,14 @@ class ConfirmBoardedBottomSheet extends StatelessWidget {
                             vertical: 3.h,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFF7ED),
+                            color: const Color(0xFFF1F5F9),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: const CommonText(
-                            text: 'Required',
+                            text: 'Optional',
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFFEA580C),
+                            color: Color(0xFF64748B),
                           ),
                         ),
                     ],
@@ -132,8 +132,8 @@ class ConfirmBoardedBottomSheet extends StatelessWidget {
                   /// Description
                   CommonText(
                     text: controller.hasProofPhoto.value
-                        ? 'Take a live photo of the children seated in your vehicle.'
-                        : 'Take a live photo of the children seated in your vehicle. Parents see it in their booking.',
+                        ? 'Photo of the children seated in your vehicle.'
+                        : 'Take a live photo of the children seated in your vehicle (optional). Parents see it in their booking.',
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFF64748B),
@@ -220,7 +220,7 @@ class ConfirmBoardedBottomSheet extends StatelessWidget {
                 ),
                 child: const Center(
                   child: CommonText(
-                    text: 'Confirm pickup & share photo',
+                    text: 'Confirm pickup',
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,

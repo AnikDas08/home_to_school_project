@@ -580,7 +580,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           Expanded(
             flex: 4,
             child: GestureDetector(
-              onTap: () => Get.toNamed(AppRoutes.chat),
+              onTap: () => Get.toNamed(
+                AppRoutes.message,
+                parameters: {
+                  'chatId': provider.id,
+                  'name': provider.name,
+                },
+              ),
               behavior: HitTestBehavior.opaque,
               child: Container(
                 height: 48.h,

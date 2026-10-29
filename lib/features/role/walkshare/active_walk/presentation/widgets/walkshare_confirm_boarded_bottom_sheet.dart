@@ -105,34 +105,36 @@ class WalkshareConfirmBoardedBottomSheet extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 3.h,
+                      if (!controller.hasProofPhoto.value)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 3.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: const CommonText(
+                            text: 'Optional',
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF64748B),
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFF7ED),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: const CommonText(
-                          text: 'Required',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFEA580C),
-                        ),
-                      ),
                     ],
                   ),
 
                   6.height,
 
                   /// Subtitle
-                  const CommonText(
-                    text:
-                        'Take a live photo of the children assembled for walking. Parents see it in their booking.',
+                  CommonText(
+                    text: controller.hasProofPhoto.value
+                        ? 'Photo of the children assembled for walking.'
+                        : 'Take a live photo of the children assembled for walking (optional). Parents see it in their booking.',
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF64748B),
+                    color: const Color(0xFF64748B),
                     textAlign: TextAlign.start,
                     maxLines: 2,
                   ),
@@ -242,7 +244,7 @@ class WalkshareConfirmBoardedBottomSheet extends StatelessWidget {
                     ),
                     8.width,
                     const CommonText(
-                      text: 'Confirm pickup & share photo',
+                      text: 'Confirm pickup',
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,

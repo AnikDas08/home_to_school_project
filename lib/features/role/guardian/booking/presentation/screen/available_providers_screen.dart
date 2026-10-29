@@ -41,27 +41,6 @@ class AvailableProvidersScreen extends StatelessWidget {
           color: Color(0xFF0F172A),
         ),
         actions: [
-          /// Map view button (as shown in Image 2)
-          Container(
-            width: 36.w,
-            height: 36.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF1F5F9),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: Icon(
-                Icons.map_outlined,
-                size: 18.sp,
-                color: const Color(0xFF0F172A),
-              ),
-              onPressed: () {},
-            ),
-          ),
-
-          8.width,
-
           /// Filter button
           Container(
             margin: EdgeInsets.only(right: 16.w),

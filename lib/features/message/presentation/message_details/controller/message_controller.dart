@@ -69,17 +69,21 @@ class MessageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final params = Get.parameters;
-    if (params['name'] != null && params['name']!.isNotEmpty) {
-      name = params['name']!;
-    }
-    if (params['chatId'] != null) {
-      chatId = params['chatId']!;
-    }
+    syncParams();
 
     // API calls commented out for now as requested
     // getMessages();
     // listenMessage(chatId);
+  }
+
+  void syncParams() {
+    final params = Get.parameters;
+    if (params['name'] != null && params['name']!.isNotEmpty) {
+      name = params['name']!;
+    }
+    if (params['chatId'] != null && params['chatId']!.isNotEmpty) {
+      chatId = params['chatId']!;
+    }
   }
 
   void _scrollToBottom() {

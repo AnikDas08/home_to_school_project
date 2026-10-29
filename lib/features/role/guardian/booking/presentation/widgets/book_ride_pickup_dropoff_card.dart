@@ -117,18 +117,48 @@ class BookRidePickupDropoffCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1B2B68),
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    child: const CommonText(
-                      text: 'On-Demand',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                  GestureDetector(
+                    onTap: controller.toggleOnDemand,
+                    behavior: HitTestBehavior.opaque,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: controller.isOnDemand
+                            ? const Color(0xFF1B2B68)
+                            : const Color(0xFFF1F5F9),
+                        borderRadius: BorderRadius.circular(6.r),
+                        border: Border.all(
+                          color: controller.isOnDemand
+                              ? const Color(0xFF1B2B68)
+                              : const Color(0xFFCBD5E1),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (controller.isOnDemand) ...[
+                            Icon(
+                              Icons.check_rounded,
+                              size: 13.sp,
+                              color: Colors.white,
+                            ),
+                            4.width,
+                          ],
+                          CommonText(
+                            text: 'On-Demand',
+                            fontSize: 11,
+                            fontWeight: controller.isOnDemand
+                                ? FontWeight.w600
+                                : FontWeight.w500,
+                            color: controller.isOnDemand
+                                ? Colors.white
+                                : const Color(0xFF64748B),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

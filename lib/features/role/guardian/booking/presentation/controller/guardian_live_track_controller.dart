@@ -17,7 +17,13 @@ class GuardianLiveTrackController extends GetxController {
   }
 
   void onMessageDriver() {
-    Get.toNamed(AppRoutes.message);
+    Get.toNamed(
+      AppRoutes.message,
+      parameters: {
+        'name': 'Tariq Ahmed',
+        'chatId': '1',
+      },
+    );
   }
 
   void onTripDetails() {

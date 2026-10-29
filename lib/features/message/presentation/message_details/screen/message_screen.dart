@@ -15,6 +15,7 @@ class MessageScreen extends StatelessWidget {
     return GetBuilder<MessageController>(
       init: MessageController(),
       builder: (controller) {
+        controller.syncParams();
         final recipientFirstName = controller.name.isNotEmpty
             ? controller.name.split(' ').first
             : 'Tariq';

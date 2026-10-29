@@ -87,24 +87,6 @@ class WalkshareActiveWalkController extends GetxController {
 
   /// Triggered when tapping "Confirm pickup & share photo" on the bottom sheet
   void onConfirmPickupAndShare() {
-    if (!hasProofPhoto.value) {
-      Get.snackbar(
-        'Photo Required',
-        'Please take a live photo of children walking together.',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFFEA580C),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 12,
-        icon: const Icon(
-          Icons.camera_alt_outlined,
-          color: Colors.white,
-        ),
-      );
-      return;
-    }
-
     /// Mark as picked up, close bottom sheet and transition to "Confirm drop-off"
     isPickedUp.value = true;
     tripStatus.value = 'On The Way';
@@ -112,7 +94,9 @@ class WalkshareActiveWalkController extends GetxController {
 
     Get.snackbar(
       'Pickup Confirmed',
-      'Photo proof shared with parents. Proceed walking to ${schoolName.value}.',
+      hasProofPhoto.value
+          ? 'Photo proof shared with parents. Proceed walking to ${schoolName.value}.'
+          : 'Pickup confirmed. Proceed walking to ${schoolName.value}.',
       snackPosition: SnackPosition.TOP,
       backgroundColor: const Color(0xFF1B2B68),
       colorText: Colors.white,

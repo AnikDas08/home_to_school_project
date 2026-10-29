@@ -328,8 +328,8 @@ class WalkshareProfileScreen extends StatelessWidget {
             onTap: () => Get.toNamed(AppRoutes.walkshareDocuments),
           ),
           ProfileMenuRow(
-            icon: Icons.account_balance_wallet_outlined,
-            title: 'Payment preference',
+            icon: Icons.receipt_long_outlined,
+            title: 'Billing & Transactions',
             showDivider: false,
             onTap: () => Get.toNamed(AppRoutes.billingAndTransactions),
           ),

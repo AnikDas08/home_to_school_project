@@ -27,6 +27,7 @@ import 'package:home_to_school/features/role/driver/profile/presentation/screen/
 import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_vehicle_info_screen.dart';
 import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_documents_screen.dart';
 import 'package:home_to_school/features/role/driver/profile/presentation/screen/document_details_screen.dart';
+import 'package:home_to_school/features/role/driver/profile/presentation/screen/driver_reviews_screen.dart';
 import 'package:home_to_school/features/common/about/presentation/screen/about_screen.dart';
 import 'package:home_to_school/features/role/driver/availability/presentation/screen/driver_availability_screen.dart';
 import 'package:home_to_school/features/role/walkshare/presentation/screen/walkshare_verification_screen.dart';
@@ -98,6 +99,7 @@ class AppRoutes {
   static const String driverSchedule = '/driver-schedule';
   static const String driverActiveTrip = '/driver-active-trip';
   static const String driverAccountProfile = '/driver-account-profile';
+  static const String driverReviews = '/driver-reviews';
   static const String driverAvailability = '/driver-availability';
   static const String walkshareVerification = '/walkshare-verification';
   static const String walkshareHome = '/walkshare-home';
@@ -168,6 +170,7 @@ class AppRoutes {
     GetPage(name: driverSchedule, page: () => const DriverScheduleScreen()),
     GetPage(name: driverActiveTrip, page: () => const DriverActiveTripScreen()),
     GetPage(name: driverAccountProfile, page: () => const DriverRoleProfileScreen()),
+    GetPage(name: driverReviews, page: () => const DriverReviewsScreen()),
     GetPage(name: driverAvailability, page: () => const DriverAvailabilityScreen()),
     GetPage(name: walkshareVerification, page: () => const WalkshareVerificationScreen()),
     GetPage(name: walkshareHome, page: () => const WalkshareHomeScreen()),

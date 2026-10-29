@@ -212,28 +212,39 @@ class DriverRoleProfileScreen extends StatelessWidget {
                     color: const Color(0xFFCBD5E1),
                   ),
                   5.height,
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star_rounded,
-                        size: 14.sp,
-                        color: const Color(0xFFF59E0B),
-                      ),
-                      4.width,
-                      CommonText(
-                        text: controller.rating,
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFFF59E0B),
-                      ),
-                      4.width,
-                      CommonText(
-                        text: '(${controller.tripCount} trips)',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF94A3B8),
-                      ),
-                    ],
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Get.toNamed(AppRoutes.driverReviews),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          size: 14.sp,
+                          color: const Color(0xFFF59E0B),
+                        ),
+                        4.width,
+                        CommonText(
+                          text: controller.rating,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFFF59E0B),
+                        ),
+                        4.width,
+                        CommonText(
+                          text: '(${controller.tripCount} trips)',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF94A3B8),
+                        ),
+                        6.width,
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          size: 14.sp,
+                          color: Colors.white70,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -365,6 +376,11 @@ class DriverRoleProfileScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
+          ProfileMenuRow(
+            icon: Icons.star_outline_rounded,
+            title: 'Ratings & reviews',
+            onTap: () => Get.toNamed(AppRoutes.driverReviews),
+          ),
           ProfileMenuRow(
             icon: Icons.card_giftcard_rounded,
             title: 'Refer a Friend',

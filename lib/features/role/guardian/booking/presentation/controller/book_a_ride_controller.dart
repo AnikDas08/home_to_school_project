@@ -51,6 +51,9 @@ class BookARideController extends GetxController {
   /// Trip Type: One way vs Round trip (Round trip active by default as in images)
   bool isRoundTrip = true;
 
+  /// On-Demand booking for Pickup & Drop-off (initially unselected)
+  bool isOnDemand = false;
+
   /// Date & Time
   DateTime selectedDate = DateTime(2026, 9, 8);
   DateTime displayedCalendarMonth = DateTime(2026, 9, 1);
@@ -124,6 +127,16 @@ class BookARideController extends GetxController {
 
   void setRoundTrip(bool value) {
     isRoundTrip = value;
+    update();
+  }
+
+  void toggleOnDemand() {
+    isOnDemand = !isOnDemand;
+    update();
+  }
+
+  void setOnDemand(bool value) {
+    isOnDemand = value;
     update();
   }
 
