@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,6 +15,11 @@ class WalkshareVerificationController extends GetxController {
   String? licenceBackFileName;
   String? proofOfAddressFileName;
   String? propertyAgreementFileName;
+
+  File? licenceFrontPhoto;
+  File? licenceBackPhoto;
+  File? proofOfAddressPhoto;
+  File? propertyAgreementPhoto;
 
   String _formatFileName(String rawName) {
     String name = rawName.split('/').last;
@@ -37,6 +43,7 @@ class WalkshareVerificationController extends GetxController {
     try {
       final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
       if (file != null) {
+        licenceFrontPhoto = File(file.path);
         licenceFrontFileName = _formatFileName(file.name);
         update();
       }
@@ -50,6 +57,7 @@ class WalkshareVerificationController extends GetxController {
     try {
       final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
       if (file != null) {
+        licenceBackPhoto = File(file.path);
         licenceBackFileName = _formatFileName(file.name);
         update();
       }
@@ -63,6 +71,7 @@ class WalkshareVerificationController extends GetxController {
     try {
       final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
       if (file != null) {
+        proofOfAddressPhoto = File(file.path);
         proofOfAddressFileName = _formatFileName(file.name);
         update();
       }
@@ -76,6 +85,7 @@ class WalkshareVerificationController extends GetxController {
     try {
       final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
       if (file != null) {
+        propertyAgreementPhoto = File(file.path);
         propertyAgreementFileName = _formatFileName(file.name);
         update();
       }

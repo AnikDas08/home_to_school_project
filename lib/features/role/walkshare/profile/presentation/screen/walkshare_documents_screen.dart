@@ -2,96 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/features/role/walkshare/profile/presentation/controller/walkshare_documents_controller.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
 class WalkshareDocumentsScreen extends StatelessWidget {
   const WalkshareDocumentsScreen({super.key});
-
-  void _showUploadSourceDialog(
-    BuildContext context,
-    WalkshareDocumentsController controller,
-    WalkshareDocumentModel doc, {
-    required bool isBack,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        return Container(
-          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40.w,
-                  height: 4.h,
-                  margin: EdgeInsets.only(bottom: 16.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFCBD5E1),
-                    borderRadius: BorderRadius.circular(2.r),
-                  ),
-                ),
-                CommonText(
-                  text: 'Upload ${doc.title} ${isBack ? "(Back)" : "(Front)"}',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF0F172A),
-                ),
-                16.height,
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFEFF6FF),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.photo_library_outlined,
-                      color: Color(0xFF1B2B68),
-                    ),
-                  ),
-                  title: const Text('Choose from Gallery'),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    controller.pickPhoto(doc,
-                        isBack: isBack, source: ImageSource.gallery);
-                  },
-                ),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFECFDF5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt_outlined,
-                      color: Color(0xFF059669),
-                    ),
-                  ),
-                  title: const Text('Take a Photo'),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    controller.pickPhoto(doc,
-                        isBack: isBack, source: ImageSource.camera);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,14 +58,48 @@ class WalkshareDocumentsScreen extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                     child: Column(
-                      children: List.generate(controller.documents.length,
-                          (index) {
-                        final doc = controller.documents[index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 14.h),
-                          child: _buildDocumentCard(context, controller, doc),
-                        );
-                      }),
+                      children: [
+                        /// Read-only / Locked notice
+                        Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.only(bottom: 14.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 14.w, vertical: 10.h),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.lock_outline_rounded,
+                                size: 16.sp,
+                                color: const Color(0xFF64748B),
+                              ),
+                              8.width,
+                              Expanded(
+                                child: Text(
+                                  'Submitted documents are locked for safety & verification compliance.',
+                                  style: TextStyle(
+                                    fontSize: 11.5.sp,
+                                    color: const Color(0xFF475569),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ...List.generate(controller.documents.length, (index) {
+                          final doc = controller.documents[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 14.h),
+                            child: _buildDocumentCard(context, controller, doc),
+                          );
+                        }),
+                      ],
                     ),
                   ),
                 ),
@@ -168,7 +118,7 @@ class WalkshareDocumentsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14.r),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF1B2B68).withOpacity(0.25),
+                            color: const Color(0xFF1B2B68).withValues(alpha: 0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -210,7 +160,7 @@ class WalkshareDocumentsScreen extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -284,12 +234,6 @@ class WalkshareDocumentsScreen extends StatelessWidget {
                     context: context,
                     label: 'Front',
                     file: doc.frontFile,
-                    onTap: () => _showUploadSourceDialog(
-                      context,
-                      controller,
-                      doc,
-                      isBack: false,
-                    ),
                   ),
                 ),
                 12.width,
@@ -298,12 +242,6 @@ class WalkshareDocumentsScreen extends StatelessWidget {
                     context: context,
                     label: 'Back',
                     file: doc.backFile,
-                    onTap: () => _showUploadSourceDialog(
-                      context,
-                      controller,
-                      doc,
-                      isBack: true,
-                    ),
                   ),
                 ),
               ],
@@ -311,25 +249,18 @@ class WalkshareDocumentsScreen extends StatelessWidget {
           else
             _buildWidePreviewBox(
               context: context,
-              label: 'Replace',
+              label: 'Document on File',
               file: doc.frontFile,
-              onTap: () => _showUploadSourceDialog(
-                context,
-                controller,
-                doc,
-                isBack: false,
-              ),
             ),
         ],
       ),
     );
   }
 
-  /// Two-sided half-width preview box (Driving Licence)
+  /// Two-sided half-width preview box (Driving Licence) - Read-only
   Widget _buildPreviewBox({
     required BuildContext context,
     required String label,
-    required VoidCallback onTap,
     File? file,
   }) {
     return Container(
@@ -380,38 +311,34 @@ class WalkshareDocumentsScreen extends StatelessWidget {
               ),
             ),
 
-          /// Bottom-left button: [ ↻ Front / Back ]
+          /// Bottom-left locked badge: [ 🔒 Front / Back ]
           Positioned(
             left: 8.w,
             bottom: 8.h,
-            child: GestureDetector(
-              onTap: onTap,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.refresh_rounded,
-                      size: 13.sp,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.lock_outline_rounded,
+                    size: 11.sp,
+                    color: Colors.white,
+                  ),
+                  4.width,
+                  Text(
+                    label,
+                    style: TextStyle(
                       color: Colors.white,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w600,
                     ),
-                    4.width,
-                    Text(
-                      label,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -420,11 +347,10 @@ class WalkshareDocumentsScreen extends StatelessWidget {
     );
   }
 
-  /// Full-width wide preview box (Proof of address / Utility bill)
+  /// Full-width wide preview box (Proof of address / Utility bill) - Read-only
   Widget _buildWidePreviewBox({
     required BuildContext context,
     required String label,
-    required VoidCallback onTap,
     File? file,
   }) {
     return Container(
@@ -476,38 +402,34 @@ class WalkshareDocumentsScreen extends StatelessWidget {
               ),
             ),
 
-          /// Bottom-left button: [ ↻ Replace ]
+          /// Bottom-left locked badge: [ 🔒 Document on File ]
           Positioned(
             left: 10.w,
             bottom: 8.h,
-            child: GestureDetector(
-              onTap: onTap,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.refresh_rounded,
-                      size: 13.sp,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.lock_outline_rounded,
+                    size: 12.sp,
+                    color: Colors.white,
+                  ),
+                  5.width,
+                  Text(
+                    label,
+                    style: TextStyle(
                       color: Colors.white,
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w600,
                     ),
-                    5.width,
-                    Text(
-                      label,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -2,169 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/config/route/app_routes.dart';
 import 'package:home_to_school/features/role/driver/profile/data/models/driver_document_model.dart';
 import 'package:home_to_school/features/role/driver/profile/presentation/controller/driver_documents_controller.dart';
-import 'package:home_to_school/utils/constants/app_images.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
 class DocumentDetailsScreen extends StatelessWidget {
   const DocumentDetailsScreen({super.key});
-
-  void _showUploadBottomSheet(
-      BuildContext context, DriverDocumentsController controller, DriverDocumentItem doc) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-          ),
-          padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 24.h),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40.w,
-                    height: 4.h,
-                    margin: EdgeInsets.only(bottom: 14.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFCBD5E1),
-                      borderRadius: BorderRadius.circular(2.r),
-                    ),
-                  ),
-                ),
-                CommonText(
-                  text: 'Upload ${doc.title}',
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF0F172A),
-                ),
-                4.height,
-                const CommonText(
-                  text: 'Select a clear photo or scan of your document',
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF64748B),
-                ),
-                18.height,
-                _buildSourceTile(
-                  icon: Icons.photo_library_rounded,
-                  iconColor: const Color(0xFF1B2B68),
-                  bgColor: const Color(0xFFEFF6FF),
-                  title: 'Choose from Gallery',
-                  subtitle: 'Select from photo library',
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    controller.uploadDocument(doc, ImageSource.gallery);
-                  },
-                ),
-                10.height,
-                _buildSourceTile(
-                  icon: Icons.camera_alt_rounded,
-                  iconColor: const Color(0xFF10B981),
-                  bgColor: const Color(0xFFECFDF5),
-                  title: 'Take a Photo',
-                  subtitle: 'Use camera to capture document',
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    controller.uploadDocument(doc, ImageSource.camera);
-                  },
-                ),
-                16.height,
-                GestureDetector(
-                  onTap: () => Navigator.pop(ctx),
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 13.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    alignment: Alignment.center,
-                    child: const CommonText(
-                      text: 'Cancel',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF64748B),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSourceTile({
-    required IconData icon,
-    required Color iconColor,
-    required Color bgColor,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 11.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(9.r),
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: iconColor, size: 20.sp),
-            ),
-            12.width,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CommonText(
-                    text: title,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF0F172A),
-                  ),
-                  2.height,
-                  CommonText(
-                    text: subtitle,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF64748B),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFF94A3B8),
-              size: 20,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,58 +81,89 @@ class DocumentDetailsScreen extends StatelessWidget {
 
                   24.height,
 
-                  /// 4. Action Button
-                  if (doc.isNotSubmitted)
-                    GestureDetector(
-                      onTap: () => _showUploadBottomSheet(context, controller, doc),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        width: double.infinity,
-                        height: 48.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1B2B68),
-                          borderRadius: BorderRadius.circular(12.r),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x201B2B68),
-                              blurRadius: 10,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
+                  /// 4. Read-Only Compliance Banner
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.lock_outline_rounded,
+                          size: 18.sp,
+                          color: const Color(0xFF64748B),
                         ),
-                        alignment: Alignment.center,
-                        child: const CommonText(
-                          text: 'Upload Document',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  else
-                    GestureDetector(
-                      onTap: () => _showUploadBottomSheet(context, controller, doc),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        width: double.infinity,
-                        height: 48.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: const Color(0xFF1B2B68),
-                            width: 1.2,
+                        10.width,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Document is locked',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF0F172A),
+                                ),
+                              ),
+                              3.height,
+                              Text(
+                                'Documents cannot be edited after registration for safety and verification compliance. Contact support to request any update.',
+                                style: TextStyle(
+                                  fontSize: 11.5.sp,
+                                  color: const Color(0xFF64748B),
+                                  height: 1.35,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        alignment: Alignment.center,
-                        child: const CommonText(
-                          text: 'Update or Re-upload Document',
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1B2B68),
+                      ],
+                    ),
+                  ),
+
+                  14.height,
+
+                  /// 5. Contact Support Button
+                  GestureDetector(
+                    onTap: () => Get.toNamed(AppRoutes.contactSupport),
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      width: double.infinity,
+                      height: 48.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: const Color(0xFFCBD5E1),
+                          width: 1.2,
                         ),
                       ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.headset_mic_outlined,
+                            size: 18.sp,
+                            color: const Color(0xFF1B2B68),
+                          ),
+                          8.width,
+                          const CommonText(
+                            text: 'Contact Support to Update',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1B2B68),
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
 
                   20.height,
                 ],
@@ -550,44 +427,39 @@ class DocumentDetailsScreen extends StatelessWidget {
               ),
             )
           else
-            GestureDetector(
-              onTap: () => _showUploadBottomSheet(context, controller, doc),
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                width: double.infinity,
-                height: 120.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: const Color(0xFF93C5FD),
-                    style: BorderStyle.solid,
+            Container(
+              width: double.infinity,
+              height: 140.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.description_outlined,
+                    size: 38.sp,
+                    color: const Color(0xFF1B2B68),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.camera_alt_outlined,
-                      size: 32.sp,
-                      color: const Color(0xFF1B2B68),
-                    ),
-                    8.height,
-                    const CommonText(
-                      text: 'Tap to upload or take a photo',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0F172A),
-                    ),
-                    2.height,
-                    const CommonText(
-                      text: 'Supports JPG, PNG, and PDF files',
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF64748B),
-                    ),
-                  ],
-                ),
+                  8.height,
+                  CommonText(
+                    text: doc.isApproved
+                        ? 'Digital Document on File'
+                        : 'Document Submitted',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF0F172A),
+                  ),
+                  2.height,
+                  const CommonText(
+                    text: 'Encrypted & Stored Securely (Read-only)',
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF64748B),
+                  ),
+                ],
               ),
             ),
         ],

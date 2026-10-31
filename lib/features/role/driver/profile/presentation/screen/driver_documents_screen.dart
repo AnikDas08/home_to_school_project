@@ -67,6 +67,39 @@ class DriverDocumentsScreen extends StatelessWidget {
 
                   12.height,
 
+                  /// Read-only / Locked notice
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.lock_outline_rounded,
+                          size: 16.sp,
+                          color: const Color(0xFF64748B),
+                        ),
+                        8.width,
+                        Expanded(
+                          child: Text(
+                            'Submitted documents are locked for safety & verification compliance.',
+                            style: TextStyle(
+                              fontSize: 11.5.sp,
+                              color: const Color(0xFF475569),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  12.height,
+
                   /// Documents Card
                   Container(
                     decoration: BoxDecoration(

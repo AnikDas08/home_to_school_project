@@ -114,7 +114,7 @@ class WalkshareVerificationScreen extends StatelessWidget {
                         _buildCardHeader(
                           icon: Icons.home_outlined,
                           title: 'Proof of address',
-                          subtitle: 'Utility Bill',
+                          subtitle: 'Current Utility Bill',
                         ),
                         14.height,
                         _buildDocumentUploadBox(
@@ -160,7 +160,7 @@ class WalkshareVerificationScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF1B2B68).withOpacity(0.25),
+                            color: const Color(0xFF1B2B68).withValues(alpha: 0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),

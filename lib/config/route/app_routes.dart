@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:home_to_school/features/common/auth/presentation/change_password/screen/change_password_screen.dart';
 import 'package:home_to_school/features/common/auth/presentation/forgot_password/screen/create_password.dart';
 import 'package:home_to_school/features/common/auth/presentation/forgot_password/screen/forgot_password.dart';
 import 'package:home_to_school/features/common/auth/presentation/forgot_password/screen/verify_screen.dart';
@@ -18,6 +17,7 @@ import 'package:home_to_school/features/role/guardian/booking/presentation/scree
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/guardian_live_track_screen.dart';
 import 'package:home_to_school/features/role/driver/presentation/screen/driver_licence_screen.dart';
 import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_details_screen.dart';
+import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_insurance_screen.dart';
 import 'package:home_to_school/features/role/driver/home/presentation/screen/driver_home_screen.dart';
 import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_requests_screen.dart';
 import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_request_details_screen.dart';
@@ -39,8 +39,6 @@ import 'package:home_to_school/features/role/walkshare/profile/presentation/scre
 import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_documents_screen.dart';
 import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_reviews_screen.dart';
 import 'package:home_to_school/features/role/walkshare/active_walk/presentation/screen/walkshare_active_walk_screen.dart';
-import 'package:home_to_school/features/role/guardian/home/presentation/screen/all_trips_screen.dart';
-import 'package:home_to_school/features/role/guardian/home/presentation/screen/home_screen.dart';
 import 'package:home_to_school/features/message/presentation/chat_list/screen/chat_screen.dart';
 import 'package:home_to_school/features/message/presentation/message_details/screen/message_screen.dart';
 import 'package:home_to_school/features/notifications/presentation/screen/notifications_screen.dart';
@@ -55,7 +53,6 @@ import 'package:home_to_school/features/role/guardian/profile/presentation/scree
 import 'package:home_to_school/features/role/guardian/profile/presentation/screen/contact_support_screen.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/screen/faq_screen.dart';
 import 'package:home_to_school/features/profile/presentation/screen/edit_profile.dart';
-import 'package:home_to_school/features/profile/presentation/screen/profile_screen.dart';
 
 import 'package:home_to_school/features/setting/presentation/screen/privacy_policy_screen.dart';
 import 'package:home_to_school/features/setting/presentation/screen/setting_screen.dart';
@@ -90,6 +87,7 @@ class AppRoutes {
   static const String guardianLiveTrack = '/guardian-live-track';
   static const String driverLicence = '/driver-licence';
   static const String driverVehicleDetails = '/driver-vehicle-details';
+  static const String driverVehicleInsurance = '/driver-vehicle-insurance';
   static const String driverVehicleInfo = '/driver-vehicle-info';
   static const String driverDocuments = '/driver-documents';
   static const String documentDetails = '/document-details';
@@ -161,6 +159,7 @@ class AppRoutes {
     GetPage(name: guardianLiveTrack, page: () => const GuardianLiveTrackScreen()),
     GetPage(name: driverLicence, page: () => const DriverLicenceScreen()),
     GetPage(name: driverVehicleDetails, page: () => const VehicleDetailsScreen()),
+    GetPage(name: driverVehicleInsurance, page: () => const VehicleInsuranceScreen()),
     GetPage(name: driverVehicleInfo, page: () => const DriverVehicleInfoScreen()),
     GetPage(name: driverDocuments, page: () => const DriverDocumentsScreen()),
     GetPage(name: documentDetails, page: () => const DocumentDetailsScreen()),

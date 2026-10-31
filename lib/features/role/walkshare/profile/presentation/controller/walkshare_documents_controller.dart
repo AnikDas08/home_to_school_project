@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:home_to_school/features/role/walkshare/presentation/controller/walkshare_verification_controller.dart';
 
 class WalkshareDocumentModel {
   final String id;
@@ -31,32 +32,51 @@ class WalkshareDocumentsController extends GetxController {
 
   final ImagePicker _picker = ImagePicker();
 
-  final List<WalkshareDocumentModel> documents = [
-    WalkshareDocumentModel(
-      id: '1',
-      title: 'Driving licence',
-      subtitle: 'Both sides',
-      icon: Icons.credit_card_outlined,
-      isTwoSided: true,
-      status: 'In review',
-    ),
-    WalkshareDocumentModel(
-      id: '2',
-      title: 'Proof of address',
-      subtitle: 'Property tax or tenancy agreement',
-      icon: Icons.home_outlined,
-      isTwoSided: false,
-      status: 'In review',
-    ),
-    WalkshareDocumentModel(
-      id: '3',
-      title: 'Utility bill',
-      subtitle: 'From the last 90 days',
-      icon: Icons.receipt_long_outlined,
-      isTwoSided: false,
-      status: 'In review',
-    ),
-  ];
+  late final List<WalkshareDocumentModel> documents;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeDocuments();
+  }
+
+  void _initializeDocuments() {
+    WalkshareVerificationController? verificationCtrl;
+    if (Get.isRegistered<WalkshareVerificationController>()) {
+      verificationCtrl = WalkshareVerificationController.instance;
+    }
+
+    documents = [
+      WalkshareDocumentModel(
+        id: '1',
+        title: 'Driving licence',
+        subtitle: 'Both sides',
+        icon: Icons.credit_card_outlined,
+        isTwoSided: true,
+        status: 'In review',
+        frontFile: verificationCtrl?.licenceFrontPhoto,
+        backFile: verificationCtrl?.licenceBackPhoto,
+      ),
+      WalkshareDocumentModel(
+        id: '2',
+        title: 'Proof of address',
+        subtitle: 'Current Utility Bill',
+        icon: Icons.home_outlined,
+        isTwoSided: false,
+        status: 'In review',
+        frontFile: verificationCtrl?.proofOfAddressPhoto,
+      ),
+      WalkshareDocumentModel(
+        id: '3',
+        title: 'Property tax or tenant agreement',
+        subtitle: 'Latest information',
+        icon: Icons.receipt_long_outlined,
+        isTwoSided: false,
+        status: 'In review',
+        frontFile: verificationCtrl?.propertyAgreementPhoto,
+      ),
+    ];
+  }
 
   Future<void> pickPhoto(WalkshareDocumentModel doc, {required bool isBack, required ImageSource source}) async {
     try {
