@@ -8,6 +8,7 @@ import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/helpers/other_helper.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:home_to_school/services/storage/storage_keys.dart';
 import 'package:home_to_school/services/storage/storage_services.dart';
 
 class SignUpController extends GetxController {
@@ -24,8 +25,19 @@ class SignUpController extends GetxController {
   bool isLoading = false;
   bool isLoadingVerify = false;
   bool isTermsAccepted = false;
-  final List<String> availableRoles = ['Parent', 'Student', 'Driver'];
+  final List<String> availableRoles = ['Parent', 'Student', 'Driver', 'WalkShare'];
   String selectRole = 'Parent';
+
+  @override
+  void onInit() {
+    super.onInit();
+    final argRole = Get.arguments != null && Get.arguments is Map ? Get.arguments['role'] : null;
+    if (argRole != null && argRole.toString().isNotEmpty) {
+      selectRole = argRole.toString();
+    } else if (LocalStorage.role.isNotEmpty) {
+      selectRole = LocalStorage.role;
+    }
+  }
   String countryCode = '+880';
   String? image;
   String signUpToken = '';
@@ -87,6 +99,17 @@ class SignUpController extends GetxController {
     }
   }
 
+  TextEditingController _addressController = TextEditingController();
+  TextEditingController get addressController {
+    try {
+      final _ = _addressController.value;
+      return _addressController;
+    } catch (_) {
+      _addressController = TextEditingController();
+      return _addressController;
+    }
+  }
+
   TextEditingController _otpController = TextEditingController();
   TextEditingController get otpController {
     try {
@@ -110,6 +133,9 @@ class SignUpController extends GetxController {
 
   void setSelectedRole(String value) {
     selectRole = value;
+    LocalStorage.role = value;
+    LocalStorage.myRole = value;
+    LocalStorage.saveRole(value);
     update();
   }
 
@@ -130,6 +156,22 @@ class SignUpController extends GetxController {
         message: 'Please agree to the Terms & conditions & Privacy Policy',
       );
       return;
+    }
+
+    final name = nameController.text.trim();
+    if (name.isNotEmpty) {
+      LocalStorage.myName = name;
+      LocalStorage.setString(LocalStorageKeys.myName, name);
+    }
+    final email = emailController.text.trim();
+    if (email.isNotEmpty) {
+      LocalStorage.myEmail = email;
+      LocalStorage.setString(LocalStorageKeys.myEmail, email);
+    }
+    final address = addressController.text.trim();
+    if (address.isNotEmpty) {
+      LocalStorage.myAddress = address;
+      LocalStorage.setString(LocalStorageKeys.myAddress, address);
     }
 
     Get.toNamed(AppRoutes.verifyUser);
@@ -171,21 +213,25 @@ class SignUpController extends GetxController {
   Future<void> verifyOtp() async {
     final storedRole = LocalStorage.role.toLowerCase();
     final currentRole = selectRole.toLowerCase();
+    final isWalkShare = storedRole.contains('walk') ||
+        currentRole.contains('walk');
     final isDriver = storedRole.contains('driver') ||
         currentRole.contains('driver') ||
         storedRole.contains('carpool') ||
         currentRole.contains('carpool');
-    final isWalkShare = storedRole.contains('walk') ||
-        currentRole.contains('walk');
+    final isStudent = storedRole.contains('student') ||
+        currentRole.contains('student');
     final isGuardian = storedRole.contains('parent') ||
         storedRole.contains('guardian') ||
         currentRole.contains('parent') ||
         currentRole.contains('guardian');
 
-    if (isDriver) {
-      Get.toNamed(AppRoutes.driverLicence);
-    } else if (isWalkShare) {
+    if (isWalkShare) {
       Get.toNamed(AppRoutes.walkshareVerification);
+    } else if (isDriver) {
+      Get.toNamed(AppRoutes.driverLicence);
+    } else if (isStudent) {
+      Get.toNamed(AppRoutes.studentIdVerification, arguments: {'isRegistration': true});
     } else if (isGuardian) {
       Get.toNamed(AppRoutes.addChild);
     } else {

@@ -60,7 +60,7 @@ class WalkshareRequestDetailsController extends GetxController {
   final String earningsPeriod = '/ Month';
 
   final String complianceNotice =
-      'Approve docs first: Licence, Insurance, Registration, CBC, Vulnerable Sector';
+      'Approve docs first: Photo ID, Proof of Address, Property Agreement';
 
   void openChat() {
     Get.toNamed(AppRoutes.message);

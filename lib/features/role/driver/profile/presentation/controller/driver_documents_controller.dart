@@ -86,6 +86,7 @@ class DriverDocumentsController extends GetxController {
         issueDate: 'Not Issued',
         expiryDate: 'Valid for 3 years upon completion',
         holderName: driverName,
+        isOptional: true,
         description:
             'Standard First Aid & Infant/Child CPR Level C certification credential.',
       ),

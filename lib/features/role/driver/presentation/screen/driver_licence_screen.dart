@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/features/role/driver/presentation/controller/driver_registration_controller.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
 class DriverLicenceScreen extends StatelessWidget {
@@ -293,6 +294,10 @@ class DriverLicenceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(DriverRegistrationController());
+    final bool isWalkShare = LocalStorage.isWalkShare ||
+        (Get.arguments != null &&
+            Get.arguments is Map &&
+            Get.arguments['role']?.toString().toLowerCase().contains('walk') == true);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -314,12 +319,35 @@ class DriverLicenceScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         centerTitle: true,
-        title: const CommonText(
-          text: "Driver's Licence",
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF0F172A),
-        ),
+        title: isWalkShare
+            ? Text.rich(
+                TextSpan(
+                  text: 'Photo IDs',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF0F172A),
+                  ),
+                  children: [
+                    TextSpan(
+                      text: ' - Driver’s Licence/ PR Card / Passport',
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                  ],
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )
+            : const CommonText(
+                text: "Driver's Licence",
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF0F172A),
+              ),
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(
@@ -594,11 +622,11 @@ class DriverLicenceScreen extends StatelessWidget {
                   14.height,
 
                   /// 6. Front of Licence Upload Box (Responsive & Overflow-safe)
-                  const CommonText(
-                    text: 'Front of licence',
+                  CommonText(
+                    text: isWalkShare ? 'Front of Photo ID' : 'Front of licence',
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF0F172A),
+                    color: const Color(0xFF0F172A),
                   ),
                   6.height,
                   _buildUploadBox(
@@ -611,11 +639,11 @@ class DriverLicenceScreen extends StatelessWidget {
                   14.height,
 
                   /// 7. Back of Licence Upload Box (Responsive & Overflow-safe)
-                  const CommonText(
-                    text: 'Back of licence',
+                  CommonText(
+                    text: isWalkShare ? 'Back of Photo ID' : 'Back of licence',
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF0F172A),
+                    color: const Color(0xFF0F172A),
                   ),
                   6.height,
                   _buildUploadBox(

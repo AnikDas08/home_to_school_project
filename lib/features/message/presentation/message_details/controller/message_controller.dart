@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/enum/enum.dart';
 
 class MessageItem {
@@ -27,49 +28,101 @@ class MessageController extends GetxController {
   final ScrollController scrollController = ScrollController();
   final TextEditingController messageController = TextEditingController();
 
-  final List<String> quickReplies = [
-    "I'm on my way",
-    "I've arrived",
-    "Child has been picked up",
-    "Child dropped off safely",
-  ];
+  List<String> get quickReplies {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+    if (isStudent) {
+      return [
+        "I'm on my way",
+        "I've arrived",
+        "I have boarded",
+        "Arrived safely at campus",
+      ];
+    }
+    return [
+      "I'm on my way",
+      "I've arrived",
+      "Child has been picked up",
+      "Child dropped off safely",
+    ];
+  }
 
-  final List<MessageItem> messages = [
-    MessageItem(
-      text:
-          'Good morning Sadia! I am about 5 minutes away from your home pickup.',
-      time: '07:25 AM',
-      isMe: false,
-    ),
-    MessageItem(
-      text:
-          'Good morning Tariq! Arman and Emma are waiting at the front porch with their school backpacks.',
-      time: '07:31 AM',
-      isMe: true,
-    ),
-    MessageItem(
-      text: 'Children safely boarded & buckled in • 07:33 AM',
-      time: '07:33 AM',
-      isMe: false,
-      isStatus: true,
-    ),
-    MessageItem(
-      text:
-          'Got both of them buckled in safely! We are now heading towards Greenfield International School.',
-      time: '07:34 AM',
-      isMe: false,
-    ),
-    MessageItem(
-      text: 'Thank you — please ping when you reach the loop.',
-      time: '07:35 AM',
-      isMe: true,
-    ),
-  ];
+  List<MessageItem> messages = [];
+
+  void _loadMessages() {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+    if (isStudent) {
+      final studentName = LocalStorage.myName.isNotEmpty ? LocalStorage.myName : 'Alex';
+      messages = [
+        MessageItem(
+          text:
+              'Good morning $studentName! I am about 5 minutes away from your pickup location.',
+          time: '07:25 AM',
+          isMe: false,
+        ),
+        MessageItem(
+          text:
+              'Good morning Tariq! I am waiting outside at the front entrance with my backpack.',
+          time: '07:31 AM',
+          isMe: true,
+        ),
+        MessageItem(
+          text: 'Rider safely boarded & buckled in • 07:33 AM',
+          time: '07:33 AM',
+          isMe: false,
+          isStatus: true,
+        ),
+        MessageItem(
+          text:
+              'Got you seated safely! We are now heading towards campus.',
+          time: '07:34 AM',
+          isMe: false,
+        ),
+        MessageItem(
+          text: 'Thank you — please ping when we reach the main gate.',
+          time: '07:35 AM',
+          isMe: true,
+        ),
+      ];
+    } else {
+      messages = [
+        MessageItem(
+          text:
+              'Good morning Sadia! I am about 5 minutes away from your home pickup.',
+          time: '07:25 AM',
+          isMe: false,
+        ),
+        MessageItem(
+          text:
+              'Good morning Tariq! Arman and Emma are waiting at the front porch with their school backpacks.',
+          time: '07:31 AM',
+          isMe: true,
+        ),
+        MessageItem(
+          text: 'Children safely boarded & buckled in • 07:33 AM',
+          time: '07:33 AM',
+          isMe: false,
+          isStatus: true,
+        ),
+        MessageItem(
+          text:
+              'Got both of them buckled in safely! We are now heading towards Greenfield International School.',
+          time: '07:34 AM',
+          isMe: false,
+        ),
+        MessageItem(
+          text: 'Thank you — please ping when you reach the loop.',
+          time: '07:35 AM',
+          isMe: true,
+        ),
+      ];
+    }
+  }
 
   @override
   void onInit() {
     super.onInit();
     syncParams();
+    _loadMessages();
 
     // API calls commented out for now as requested
     // getMessages();

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
 
         builder: (context, child) {
           return GetMaterialApp(
-            title: 'Home To School',
+            title: 'Home2School',
             debugShowCheckedModeBanner: false,
             scrollBehavior: const AppScrollBehavior(),
             navigatorKey: Get.key,

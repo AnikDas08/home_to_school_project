@@ -27,13 +27,22 @@ class GuardianProfileController extends GetxController {
       name = LocalStorage.myName;
     } else if (LocalStorage.user?.name.isNotEmpty == true) {
       name = LocalStorage.user!.name;
+    } else if (LocalStorage.role.toLowerCase().contains('student')) {
+      name = 'Alex Johnson';
     }
 
     if (LocalStorage.role.isNotEmpty) {
-      activeRole = LocalStorage.role.contains('Parent') ||
-              LocalStorage.role.contains('Guardian')
-          ? 'Parent'
-          : LocalStorage.role;
+      final roleLower = LocalStorage.role.toLowerCase();
+      if (roleLower.contains('student')) {
+        activeRole = 'Student (18+)';
+        roleDescription = 'Student (18+)';
+      } else if (roleLower.contains('parent') ||
+          roleLower.contains('guardian')) {
+        activeRole = 'Parent';
+        roleDescription = 'Parent (Guardian)';
+      } else {
+        activeRole = LocalStorage.role;
+      }
     }
     update();
   }

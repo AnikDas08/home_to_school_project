@@ -11,6 +11,7 @@ import 'package:home_to_school/features/role/guardian/booking/presentation/widge
 import 'package:home_to_school/features/role/guardian/booking/presentation/widgets/book_ride_pickup_dropoff_card.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/widgets/book_ride_repeat_card.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/widgets/book_ride_service_type_card.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
 class BookARideScreen extends StatelessWidget {
@@ -19,6 +20,7 @@ class BookARideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(BookARideController());
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -63,10 +65,11 @@ class BookARideScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                 child: Column(
                   children: [
-                    /// 1. Children Selection Card
-                    const BookRideChildrenCard(),
-
-                    12.height,
+                    /// 1. Children Selection Card (Only for Guardian/Parent, omitted for Student 18+)
+                    if (!isStudent) ...[
+                      const BookRideChildrenCard(),
+                      12.height,
+                    ],
 
                     /// 2. Pickup & Drop-off Location Card
                     const BookRidePickupDropoffCard(),

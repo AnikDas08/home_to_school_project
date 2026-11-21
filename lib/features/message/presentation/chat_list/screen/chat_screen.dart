@@ -6,6 +6,7 @@ import 'package:home_to_school/component/bottom_nav_bar/common_bottom_bar.dart';
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/config/route/app_routes.dart';
 import 'package:home_to_school/features/common/nav_screen/controller/nav_controller.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/constants/app_images.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -13,53 +14,105 @@ class ChatListScreen extends StatelessWidget {
   final bool isTab;
   const ChatListScreen({super.key, this.isTab = false});
 
-  final List<Map<String, dynamic>> _conversations = const [
-    {
-      'id': '1',
-      'name': 'Tariq Ahmed2',
-      'message':
-          'Got both of them buckled in safely! Heading to Greenfield.',
-      'time': '07:34 AM',
-      'avatarBg': Color(0xFFEFF6FF),
-      'avatarColor': Color(0xFF2563EB),
-    },
-    {
-      'id': '2',
-      'name': 'Sarah Jenkins1',
-      'message': 'Walking group is 2 minutes from Sunshine Pre-school.',
-      'time': '08:12 AM',
-      'avatarBg': Color(0xFFFEF2F2),
-      'avatarColor': Color(0xFFDC2626),
-    },
-    {
-      'id': '3',
-      'name': 'Farhana Yasmin1',
-      'message': "Happy to cover Emma's Friday return if Tariq is full.",
-      'time': 'Yesterday',
-      'avatarBg': Color(0xFFFFFBEB),
-      'avatarColor': Color(0xFFD97706),
-    },
-    {
-      'id': '4',
-      'name': 'Kabir Hossain',
-      'message':
-          'Confirmed Mon–Wed backup for Arman\'s soccer practice ride.',
-      'time': 'Mon',
-      'avatarBg': Color(0xFFF0FDF4),
-      'avatarColor': Color(0xFF16A34A),
-    },
-    {
-      'id': '5',
-      'name': 'Elena Rostova',
-      'message': 'West-gate walk group has space for Zara next week.',
-      'time': 'Sun',
-      'avatarBg': Color(0xFFFAF5FF),
-      'avatarColor': Color(0xFF9333EA),
-    },
-  ];
+  List<Map<String, dynamic>> _getConversations() {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+    if (isStudent) {
+      return const [
+        {
+          'id': '1',
+          'name': 'Tariq Ahmed',
+          'message':
+              'Got you buckled in safely! Heading to campus.',
+          'time': '07:34 AM',
+          'avatarBg': Color(0xFFEFF6FF),
+          'avatarColor': Color(0xFF2563EB),
+        },
+        {
+          'id': '2',
+          'name': 'Sarah Jenkins',
+          'message': 'Walking group is 2 minutes from Campus East gate.',
+          'time': '08:12 AM',
+          'avatarBg': Color(0xFFFEF2F2),
+          'avatarColor': Color(0xFFDC2626),
+        },
+        {
+          'id': '3',
+          'name': 'Farhana Yasmin',
+          'message': "Happy to cover Friday's return trip if Tariq is full.",
+          'time': 'Yesterday',
+          'avatarBg': Color(0xFFFFFBEB),
+          'avatarColor': Color(0xFFD97706),
+        },
+        {
+          'id': '4',
+          'name': 'Kabir Hossain',
+          'message':
+              'Confirmed Mon–Wed schedule for your evening lecture ride.',
+          'time': 'Mon',
+          'avatarBg': Color(0xFFF0FDF4),
+          'avatarColor': Color(0xFF16A34A),
+        },
+        {
+          'id': '5',
+          'name': 'Elena Rostova',
+          'message': 'West-gate walk group has space available for you next week.',
+          'time': 'Sun',
+          'avatarBg': Color(0xFFFAF5FF),
+          'avatarColor': Color(0xFF9333EA),
+        },
+      ];
+    }
+
+    return const [
+      {
+        'id': '1',
+        'name': 'Tariq Ahmed2',
+        'message':
+            'Got both of them buckled in safely! Heading to Greenfield.',
+        'time': '07:34 AM',
+        'avatarBg': Color(0xFFEFF6FF),
+        'avatarColor': Color(0xFF2563EB),
+      },
+      {
+        'id': '2',
+        'name': 'Sarah Jenkins1',
+        'message': 'Walking group is 2 minutes from Sunshine Pre-school.',
+        'time': '08:12 AM',
+        'avatarBg': Color(0xFFFEF2F2),
+        'avatarColor': Color(0xFFDC2626),
+      },
+      {
+        'id': '3',
+        'name': 'Farhana Yasmin1',
+        'message': "Happy to cover Emma's Friday return if Tariq is full.",
+        'time': 'Yesterday',
+        'avatarBg': Color(0xFFFFFBEB),
+        'avatarColor': Color(0xFFD97706),
+      },
+      {
+        'id': '4',
+        'name': 'Kabir Hossain',
+        'message':
+            'Confirmed Mon–Wed backup for Arman\'s soccer practice ride.',
+        'time': 'Mon',
+        'avatarBg': Color(0xFFF0FDF4),
+        'avatarColor': Color(0xFF16A34A),
+      },
+      {
+        'id': '5',
+        'name': 'Elena Rostova',
+        'message': 'West-gate walk group has space for Zara next week.',
+        'time': 'Sun',
+        'avatarBg': Color(0xFFFAF5FF),
+        'avatarColor': Color(0xFF9333EA),
+      },
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final conversations = _getConversations();
+
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -103,14 +156,14 @@ class ChatListScreen extends StatelessWidget {
       body: ListView.separated(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.zero,
-        itemCount: _conversations.length,
+        itemCount: conversations.length,
         separatorBuilder: (_, __) => const Divider(
           height: 1,
           thickness: 1,
           color: Color(0xFFF1F5F9),
         ),
         itemBuilder: (context, index) {
-          final item = _conversations[index];
+          final item = conversations[index];
 
           return InkWell(
             onTap: () {

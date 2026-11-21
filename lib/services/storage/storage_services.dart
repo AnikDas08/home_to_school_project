@@ -14,6 +14,7 @@ class LocalStorage {
   static String myImage = '';
   static String myName = '';
   static String myEmail = '';
+  static String myAddress = '';
   static String get name => myName;
   static set name(String val) => myName = val;
   static String get email => myEmail;
@@ -58,6 +59,7 @@ class LocalStorage {
     myImage = localStorage.getString(LocalStorageKeys.myImage) ?? '';
     myName = localStorage.getString(LocalStorageKeys.myName) ?? '';
     myEmail = localStorage.getString(LocalStorageKeys.myEmail) ?? '';
+    myAddress = localStorage.getString(LocalStorageKeys.myAddress) ?? '';
     myRole = localStorage.getString(LocalStorageKeys.myRole) ?? '';
     role = localStorage.getString(LocalStorageKeys.role) ?? myRole;
     if (myRole.isEmpty && role.isNotEmpty) {

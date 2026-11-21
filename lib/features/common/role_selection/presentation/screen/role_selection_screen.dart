@@ -188,6 +188,12 @@ class RoleSelectionScreen extends StatelessWidget {
           size: Size(22.sp, 22.sp),
           painter: _FootprintsPainter(color: color),
         );
+      case RoleIconType.student:
+        return Icon(
+          Icons.school_outlined,
+          color: color,
+          size: 24.sp,
+        );
     }
   }
 }

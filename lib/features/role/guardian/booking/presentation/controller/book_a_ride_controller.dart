@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:home_to_school/config/route/app_routes.dart';
-import 'package:home_to_school/utils/app_snackbar.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 
 class ChildModel {
   final String id;
@@ -73,6 +73,12 @@ class BookARideController extends GetxController {
   /// Additional Notes
   final TextEditingController notesController = TextEditingController();
 
+  /// Location Text Controllers for manual input & bottom sheet selection
+  final TextEditingController pickupLocationController =
+      TextEditingController();
+  final TextEditingController dropOffLocationController =
+      TextEditingController();
+
   final List<String> weekDays = const [
     'Mon',
     'Tue',
@@ -84,7 +90,26 @@ class BookARideController extends GetxController {
   ];
 
   @override
+  void onInit() {
+    super.onInit();
+    if (pickupLocation != null && pickupLocation!.isNotEmpty) {
+      pickupLocationController.text = pickupLocation!;
+    }
+    if (dropOffLocation != null && dropOffLocation!.isNotEmpty) {
+      dropOffLocationController.text = dropOffLocation!;
+    }
+    pickupLocationController.addListener(() {
+      pickupLocation = pickupLocationController.text;
+    });
+    dropOffLocationController.addListener(() {
+      dropOffLocation = dropOffLocationController.text;
+    });
+  }
+
+  @override
   void onClose() {
+    pickupLocationController.dispose();
+    dropOffLocationController.dispose();
     notesController.dispose();
     super.onClose();
   }
@@ -92,7 +117,12 @@ class BookARideController extends GetxController {
   // ==========================================
   // GETTERS & COMPUTED PROPERTIES
   // ==========================================
+  bool get isStudent => LocalStorage.role.toLowerCase().contains('student');
+
   String get selectedChildrenSubtitle {
+    if (isStudent) {
+      return 'Self (Student)';
+    }
     final names = allChildren
         .where((c) => selectedChildrenIds.contains(c.id))
         .map((c) => c.name)
@@ -197,11 +227,19 @@ class BookARideController extends GetxController {
 
   void setPickupLocation(String loc) {
     pickupLocation = loc;
+    pickupLocationController.value = TextEditingValue(
+      text: loc,
+      selection: TextSelection.collapsed(offset: loc.length),
+    );
     update();
   }
 
   void setDropOffLocation(String loc) {
     dropOffLocation = loc;
+    dropOffLocationController.value = TextEditingValue(
+      text: loc,
+      selection: TextSelection.collapsed(offset: loc.length),
+    );
     update();
   }
 

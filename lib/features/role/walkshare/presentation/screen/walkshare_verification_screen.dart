@@ -29,6 +29,13 @@ class WalkshareVerificationScreen extends StatelessWidget {
           ),
           onPressed: () => Get.back(),
         ),
+        centerTitle: true,
+        title: const CommonText(
+          text: 'Verification documents',
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFF0F172A),
+        ),
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(
@@ -73,7 +80,8 @@ class WalkshareVerificationScreen extends StatelessWidget {
                       children: [
                         _buildCardHeader(
                           icon: Icons.credit_card_outlined,
-                          title: 'Driving licence',
+                          title: 'Photo IDs',
+                          titleSuffix: ' - Driver’s Licence/ PR Card / Passport',
                           subtitle: 'Both sides',
                         ),
                         14.height,
@@ -207,6 +215,7 @@ class WalkshareVerificationScreen extends StatelessWidget {
   Widget _buildCardHeader({
     required IconData icon,
     required String title,
+    String? titleSuffix,
     required String subtitle,
   }) {
     return Row(
@@ -231,15 +240,26 @@ class WalkshareVerificationScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14.5.sp,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF0F172A),
+              Text.rich(
+                TextSpan(
+                  text: title,
+                  style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF0F172A),
+                  ),
+                  children: [
+                    if (titleSuffix != null && titleSuffix.isNotEmpty)
+                      TextSpan(
+                        text: titleSuffix,
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
+                  ],
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
               2.height,
               Text(

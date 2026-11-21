@@ -44,11 +44,14 @@ class GuardianProfileScreen extends StatelessWidget {
           },
         ),
         centerTitle: true,
-        title: const CommonText(
-          text: 'Parent Profile',
+        title: CommonText(
+          text: (controller.activeRole.toLowerCase().contains('student') ||
+                  LocalStorage.role.toLowerCase().contains('student'))
+              ? 'Student Profile'
+              : 'Parent Profile',
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: Color(0xFF0F172A),
+          color: const Color(0xFF0F172A),
         ),
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
@@ -181,10 +184,16 @@ class GuardianProfileScreen extends StatelessWidget {
                         ),
                       ),
                       6.width,
-                      Icon(
-                        Icons.check_circle_rounded,
-                        size: 16.sp,
-                        color: const Color(0xFF38BDF8),
+                      Image.asset(
+                        AppImages.greenCheck,
+                        width: 17.sp,
+                        height: 17.sp,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Icon(
+                          Icons.check_circle_rounded,
+                          size: 17.sp,
+                          color: const Color(0xFF22C55E),
+                        ),
                       ),
                     ],
                   ),
@@ -237,6 +246,9 @@ class GuardianProfileScreen extends StatelessWidget {
 
   /// 2. Menu Group 1: Family & Safety
   Widget _buildFamilyGroup(GuardianProfileController controller) {
+    final isStudent = controller.activeRole.toLowerCase().contains('student') ||
+        LocalStorage.role.toLowerCase().contains('student');
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
@@ -256,12 +268,20 @@ class GuardianProfileScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ProfileMenuRow(
-            icon: Icons.people_alt_outlined,
-            title: 'My Children',
-            badgeText: '${controller.childrenCount}',
-            onTap: () => Get.toNamed(AppRoutes.myChildren),
-          ),
+          if (!isStudent)
+            ProfileMenuRow(
+              icon: Icons.people_alt_outlined,
+              title: 'My Children',
+              badgeText: '${controller.childrenCount}',
+              onTap: () => Get.toNamed(AppRoutes.myChildren),
+            ),
+          if (isStudent)
+            ProfileMenuRow(
+              icon: Icons.school_outlined,
+              title: 'Student ID & Enrollment',
+              badgeText: 'Verified',
+              onTap: () => Get.toNamed(AppRoutes.studentIdVerification),
+            ),
           ProfileMenuRow(
             icon: Icons.location_on_outlined,
             title: 'Saved Locations',

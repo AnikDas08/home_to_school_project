@@ -187,10 +187,16 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                           color: const Color(0xFF0F172A),
                         ),
                         6.width,
-                        Icon(
-                          Icons.check_circle_rounded,
-                          size: 18.sp,
-                          color: const Color(0xFF38BDF8),
+                        Image.asset(
+                          AppImages.greenCheck,
+                          width: 18.sp,
+                          height: 18.sp,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.check_circle_rounded,
+                            size: 18.sp,
+                            color: const Color(0xFF22C55E),
+                          ),
                         ),
                       ],
                     ),

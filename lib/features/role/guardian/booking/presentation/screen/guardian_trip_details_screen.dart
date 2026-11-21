@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/controller/guardian_trip_details_controller.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/widgets/pickup_proof_modal.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/constants/app_images.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -13,6 +14,7 @@ class GuardianTripDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(GuardianTripDetailsController());
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -103,10 +105,11 @@ class GuardianTripDetailsScreen extends StatelessWidget {
 
               12.height,
 
-              /// 2. "Pickup & drop-off photos" Card
-              _buildPhotosCard(context),
-
-              12.height,
+              /// 2. "Pickup & drop-off photos" Card (Only for Guardian/Parent, omitted for Student 18+)
+              if (!isStudent) ...[
+                _buildPhotosCard(context),
+                12.height,
+              ],
 
               /// 3. Driver & Vehicle Card
               _buildDriverAndVehicleCard(controller),
@@ -557,8 +560,81 @@ class GuardianTripDetailsScreen extends StatelessWidget {
     );
   }
 
-  /// 4. Children (2) Card
+  /// 4. Children (2) Card (Or Student Rider Card for Student 18+)
   Widget _buildChildrenCard() {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+
+    if (isStudent) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Icon(
+                Icons.school_outlined,
+                size: 20.sp,
+                color: const Color(0xFF1E3A8A),
+              ),
+            ),
+            12.width,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CommonText(
+                    text: 'Student Rider',
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0F172A),
+                  ),
+                  2.height,
+                  const CommonText(
+                    text: 'Self (Student 18+)',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF64748B),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(color: const Color(0xFFBFDBFE)),
+              ),
+              child: const CommonText(
+                text: 'Verified 18+',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1D4ED8),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),

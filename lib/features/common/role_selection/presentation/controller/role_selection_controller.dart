@@ -5,7 +5,7 @@ import 'package:home_to_school/features/common/auth/presentation/sign_up/control
 import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/constants/app_string.dart';
 
-enum RoleIconType { parent, driver, walkShare }
+enum RoleIconType { parent, driver, walkShare, student }
 
 class RoleOption {
   final String title;
@@ -37,6 +37,11 @@ class RoleSelectionController extends GetxController {
       title: AppString.walkShare,
       subtitle: AppString.walkShareDesc,
       iconType: RoleIconType.walkShare,
+    ),
+    RoleOption(
+      title: AppString.student18Plus,
+      subtitle: AppString.student18PlusDesc,
+      iconType: RoleIconType.student,
     ),
   ];
 

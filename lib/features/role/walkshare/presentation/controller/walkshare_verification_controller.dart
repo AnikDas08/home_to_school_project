@@ -48,7 +48,7 @@ class WalkshareVerificationController extends GetxController {
         update();
       }
     } catch (_) {
-      licenceFrontFileName = 'licence_front.jpg';
+      licenceFrontFileName = 'photo_id_front.jpg';
       update();
     }
   }
@@ -62,7 +62,7 @@ class WalkshareVerificationController extends GetxController {
         update();
       }
     } catch (_) {
-      licenceBackFileName = 'licence_back.jpg';
+      licenceBackFileName = 'photo_id_back.jpg';
       update();
     }
   }

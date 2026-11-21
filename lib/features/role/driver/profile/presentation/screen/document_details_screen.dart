@@ -197,9 +197,12 @@ class DocumentDetailsScreen extends StatelessWidget {
       iconBg = const Color(0xFFE2E8F0);
       iconColor = const Color(0xFF64748B);
       iconData = Icons.file_upload_outlined;
-      statusTitle = 'Not Submitted';
-      statusSubtitle =
-          'Upload this document to complete your driver verification profile.';
+      statusTitle = doc.isOptional
+          ? 'Optional (Not Submitted)'
+          : 'Not Submitted';
+      statusSubtitle = doc.isOptional
+          ? 'This certification is optional. Uploading it showcases additional safety qualifications to parents.'
+          : 'Upload this document to complete your driver verification profile.';
     } else {
       cardBg = const Color(0xFFFFFBEB); // Amber
       iconBg = const Color(0xFFFEF3C7);
@@ -290,6 +293,8 @@ class DocumentDetailsScreen extends StatelessWidget {
           ),
           12.height,
           _buildInfoRow('Document Name', doc.title),
+          if (doc.isOptional)
+            _buildInfoRow('Requirement Type', 'Optional'),
           _buildInfoRow('Document ID / Number', doc.documentNumber),
           _buildInfoRow('Holder Name', doc.holderName),
           _buildInfoRow('Issuing Authority', doc.issuedBy),

@@ -12,6 +12,7 @@ class DriverDocumentItem {
   final String holderName;
   String? imagePath;
   final String description;
+  final bool isOptional;
 
   DriverDocumentItem({
     required this.id,
@@ -25,6 +26,7 @@ class DriverDocumentItem {
     required this.holderName,
     this.imagePath,
     required this.description,
+    this.isOptional = false,
   });
 
   bool get isApproved => status.toLowerCase() == 'approved';

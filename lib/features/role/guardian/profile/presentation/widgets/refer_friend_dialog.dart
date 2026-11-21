@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -17,10 +18,13 @@ class ReferFriendDialog extends StatelessWidget {
     );
   }
 
-  final String referralUrl = 'https://home2school.app/join?ref=parent_sadia_92';
-
   @override
   Widget build(BuildContext context) {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+    final String referralUrl = isStudent
+        ? 'https://home2school.app/join?ref=student_alex_92'
+        : 'https://home2school.app/join?ref=parent_sadia_92';
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -97,12 +101,13 @@ class ReferFriendDialog extends StatelessWidget {
             8.height,
 
             /// Subtitle
-            const CommonText(
-              text:
-                  'Get \$15 credit when an invited family completes their first commute.',
+            CommonText(
+              text: isStudent
+                  ? 'Get \$15 credit when an invited friend completes their first commute.'
+                  : 'Get \$15 credit when an invited family completes their first commute.',
               fontSize: 13,
               fontWeight: FontWeight.w400,
-              color: Color(0xFF64748B),
+              color: const Color(0xFF64748B),
               textAlign: TextAlign.center,
             ),
 

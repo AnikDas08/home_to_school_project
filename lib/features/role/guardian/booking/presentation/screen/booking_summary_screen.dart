@@ -6,6 +6,7 @@ import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/config/route/app_routes.dart';
 import 'package:home_to_school/features/common/nav_screen/controller/nav_controller.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/controller/available_providers_controller.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -179,6 +180,8 @@ class BookingSummaryScreen extends StatelessWidget {
 
   /// Trip Information Card (matching Image 2)
   Widget _buildTripInfoCard(ProviderModel driver) {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -206,7 +209,10 @@ class BookingSummaryScreen extends StatelessWidget {
 
           14.height,
 
-          _buildInfoRow('Children', 'Arman Khan & Emma Khan (2)'),
+          _buildInfoRow(
+            isStudent ? 'Rider' : 'Children',
+            isStudent ? 'Self (Student 18+)' : 'Arman Khan & Emma Khan (2)',
+          ),
           12.height,
           _buildInfoRow('Trip Direction', '⇄ Round Trip'),
           12.height,
@@ -224,6 +230,8 @@ class BookingSummaryScreen extends StatelessWidget {
 
   /// Pricing Summary Card (matching Image 2)
   Widget _buildPricingSummaryCard() {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -251,13 +259,15 @@ class BookingSummaryScreen extends StatelessWidget {
 
           14.height,
 
-          _buildPricingRow('Weekly Base Rate', '\$240.00'),
-          12.height,
-          _buildPricingRow(
-            'Multi-Child Discount (2nd child 20% off)',
-            '-\$24.00',
-            valueColor: const Color(0xFF10B981),
-          ),
+          _buildPricingRow('Weekly Base Rate', isStudent ? '\$120.00' : '\$240.00'),
+          if (!isStudent) ...[
+            12.height,
+            _buildPricingRow(
+              'Multi-Child Discount (2nd child 20% off)',
+              '-\$24.00',
+              valueColor: const Color(0xFF10B981),
+            ),
+          ],
           12.height,
           _buildPricingRow(
             'Service Fee',

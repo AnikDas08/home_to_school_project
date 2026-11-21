@@ -18,6 +18,7 @@ import 'package:home_to_school/features/role/guardian/booking/presentation/scree
 import 'package:home_to_school/features/role/driver/presentation/screen/driver_licence_screen.dart';
 import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_details_screen.dart';
 import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_insurance_screen.dart';
+import 'package:home_to_school/features/role/student/presentation/screen/student_id_verification_screen.dart';
 import 'package:home_to_school/features/role/driver/home/presentation/screen/driver_home_screen.dart';
 import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_requests_screen.dart';
 import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_request_details_screen.dart';
@@ -85,6 +86,7 @@ class AppRoutes {
   static const String bookingSummary = '/booking-summary';
   static const String tripDetails = '/trip-details';
   static const String guardianLiveTrack = '/guardian-live-track';
+  static const String studentIdVerification = '/student-id-verification';
   static const String driverLicence = '/driver-licence';
   static const String driverVehicleDetails = '/driver-vehicle-details';
   static const String driverVehicleInsurance = '/driver-vehicle-insurance';
@@ -157,6 +159,7 @@ class AppRoutes {
     GetPage(name: bookingSummary, page: () => const BookingSummaryScreen()),
     GetPage(name: tripDetails, page: () => const GuardianTripDetailsScreen()),
     GetPage(name: guardianLiveTrack, page: () => const GuardianLiveTrackScreen()),
+    GetPage(name: studentIdVerification, page: () => const StudentIdVerificationScreen()),
     GetPage(name: driverLicence, page: () => const DriverLicenceScreen()),
     GetPage(name: driverVehicleDetails, page: () => const VehicleDetailsScreen()),
     GetPage(name: driverVehicleInsurance, page: () => const VehicleInsuranceScreen()),

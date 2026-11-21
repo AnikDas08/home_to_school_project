@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/constants/app_images.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
@@ -10,6 +11,8 @@ class GuardianSafeRideBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+
     return Container(
       height: 148.h,
       width: double.infinity,
@@ -96,11 +99,13 @@ class GuardianSafeRideBanner extends StatelessWidget {
                             6.height,
                             SizedBox(
                               width: maxTextWidth,
-                              child: const CommonText(
-                                text: "Trusted school transport for your child's everyday journey",
+                              child: CommonText(
+                                text: isStudent
+                                    ? "Trusted school transport for your everyday journey"
+                                    : "Trusted school transport for your child's everyday journey",
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF475569),
+                                color: const Color(0xFF475569),
                                 textAlign: TextAlign.start,
                                 maxLines: 3,
                               ),

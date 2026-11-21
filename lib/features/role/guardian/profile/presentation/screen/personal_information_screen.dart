@@ -26,6 +26,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final TextEditingController _addressController;
+  late final TextEditingController _institutionController;
+  late final TextEditingController _studentIdController;
 
   File? _pickedImage;
   final ImagePicker _picker = ImagePicker();
@@ -45,6 +47,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     String initialName = 'Sadia Khan';
     final isDriverRole = LocalStorage.role.toLowerCase() == 'driver' ||
         LocalStorage.role.toLowerCase() == 'walkshare';
+    final isStudentRole = LocalStorage.role.toLowerCase().contains('student');
 
     if (isDriverRole) {
       if (Get.isRegistered<DriverRoleProfileController>() &&
@@ -54,6 +57,15 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         initialName = LocalStorage.myName;
       } else {
         initialName = 'Robert MacDonald';
+      }
+    } else if (isStudentRole) {
+      if (Get.isRegistered<GuardianProfileController>() &&
+          Get.find<GuardianProfileController>().name.isNotEmpty) {
+        initialName = Get.find<GuardianProfileController>().name;
+      } else if (LocalStorage.myName.isNotEmpty) {
+        initialName = LocalStorage.myName;
+      } else {
+        initialName = 'Alex Johnson';
       }
     } else {
       if (Get.isRegistered<GuardianProfileController>() &&
@@ -66,7 +78,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
 
     final defaultEmail = isDriverRole
         ? 'robert.macdonald@example.com'
-        : 'sadia.khan@example.com';
+        : (isStudentRole
+            ? 'alex.johnson@student.edu'
+            : 'sadia.khan@example.com');
 
     _nameController = TextEditingController(text: initialName);
     _phoneController = TextEditingController(text: '(416) 555-0192');
@@ -75,8 +89,14 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           ? LocalStorage.myEmail
           : defaultEmail,
     );
-    _addressController =
-        TextEditingController(text: '12 Elm Street, Toronto, ON');
+    _addressController = TextEditingController(
+      text: LocalStorage.myAddress.isNotEmpty
+          ? LocalStorage.myAddress
+          : '12 Elm Street, Toronto, ON',
+    );
+    _institutionController =
+        TextEditingController(text: 'Seneca College');
+    _studentIdController = TextEditingController(text: 'STU-992184');
 
     _nameController.addListener(() {
       setState(() {});
@@ -89,6 +109,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _addressController.dispose();
+    _institutionController.dispose();
+    _studentIdController.dispose();
     super.dispose();
   }
 
@@ -362,6 +384,11 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       LocalStorage.myEmail = newEmail;
       LocalStorage.setString(LocalStorageKeys.myEmail, newEmail);
     }
+    final newAddress = _addressController.text.trim();
+    if (newAddress.isNotEmpty) {
+      LocalStorage.myAddress = newAddress;
+      LocalStorage.setString(LocalStorageKeys.myAddress, newAddress);
+    }
 
     if (_pickedImage != null) {
       LocalStorage.myImage = _pickedImage!.path;
@@ -382,7 +409,13 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       if (newName.isNotEmpty) {
         profileCtrl.name = newName;
       }
-      profileCtrl.roleDescription = 'Parent ($_selectedRelationship)';
+      final isStudentRole = LocalStorage.role.toLowerCase().contains('student');
+      if (isStudentRole) {
+        profileCtrl.roleDescription = 'Student (18+)';
+        profileCtrl.activeRole = 'Student (18+)';
+      } else {
+        profileCtrl.roleDescription = 'Parent ($_selectedRelationship)';
+      }
       profileCtrl.update();
     }
 
@@ -510,16 +543,24 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                         CommonText(
                           text: _nameController.text.isNotEmpty
                               ? _nameController.text
-                              : 'Sadia Khan',
+                              : (LocalStorage.role.toLowerCase().contains('student')
+                                  ? 'Alex Johnson'
+                                  : 'Sadia Khan'),
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xFF0F172A),
                         ),
                         6.width,
-                        Icon(
-                          Icons.check_circle_rounded,
-                          size: 16.sp,
-                          color: const Color(0xFF38BDF8),
+                        Image.asset(
+                          AppImages.greenCheck,
+                          width: 17.sp,
+                          height: 17.sp,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.check_circle_rounded,
+                            size: 17.sp,
+                            color: const Color(0xFF22C55E),
+                          ),
                         ),
                       ],
                     ),
@@ -557,46 +598,108 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
 
                           14.height,
 
-                          /// 2. Relationship to Children (Dropdown)
-                          _buildFieldLabel('Relationship to Children'),
-                          6.height,
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 14.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.r),
-                              border: Border.all(
-                                color: const Color(0xFFE2E8F0),
-                                width: 1.0,
+                          if (LocalStorage.role.toLowerCase().contains('student')) ...[
+                            /// 2. Institution / University (Read-Only)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildFieldLabel('Institution / University'),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.lock_outline_rounded,
+                                      size: 12.sp,
+                                      color: const Color(0xFF64748B),
+                                    ),
+                                    4.width,
+                                    const CommonText(
+                                      text: 'Verified • Read Only',
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF64748B),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            6.height,
+                            _buildReadOnlyField(
+                              controller: _institutionController,
+                              hint: 'Enter College / University',
+                            ),
+
+                            14.height,
+
+                            /// 3. Student ID Number (Read-Only)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildFieldLabel('Student ID Number'),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.lock_outline_rounded,
+                                      size: 12.sp,
+                                      color: const Color(0xFF64748B),
+                                    ),
+                                    4.width,
+                                    const CommonText(
+                                      text: 'Verified • Read Only',
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF64748B),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            6.height,
+                            _buildReadOnlyField(
+                              controller: _studentIdController,
+                              hint: 'Enter Student ID Number',
+                            ),
+                          ] else ...[
+                            /// 2. Relationship to Children (Dropdown)
+                            _buildFieldLabel('Relationship to Children'),
+                            6.height,
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 14.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(
+                                  color: const Color(0xFFE2E8F0),
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _selectedRelationship,
+                                  isExpanded: true,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: Color(0xFF64748B),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF0F172A),
+                                  ),
+                                  items: _relationships.map((rel) {
+                                    return DropdownMenuItem(
+                                      value: rel,
+                                      child: Text(rel),
+                                    );
+                                  }).toList(),
+                                  onChanged: (val) {
+                                    if (val != null) {
+                                      setState(() => _selectedRelationship = val);
+                                    }
+                                  },
+                                ),
                               ),
                             ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedRelationship,
-                                isExpanded: true,
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: Color(0xFF64748B),
-                                ),
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF0F172A),
-                                ),
-                                items: _relationships.map((rel) {
-                                  return DropdownMenuItem(
-                                    value: rel,
-                                    child: Text(rel),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  if (val != null) {
-                                    setState(() => _selectedRelationship = val);
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
+                          ],
 
                           14.height,
 
@@ -778,6 +881,49 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             vertical: 13.h,
           ),
           suffixIcon: suffixIcon,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReadOnlyField({
+    required TextEditingController controller,
+    required String hint,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(
+          color: const Color(0xFFE2E8F0),
+          width: 1.0,
+        ),
+      ),
+      child: TextField(
+        controller: controller,
+        readOnly: true,
+        enabled: false,
+        style: TextStyle(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xFF475569),
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            fontSize: 14.sp,
+            color: const Color(0xFF94A3B8),
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 14.w,
+            vertical: 13.h,
+          ),
+          suffixIcon: Icon(
+            Icons.lock_outline_rounded,
+            size: 16.sp,
+            color: const Color(0xFF94A3B8),
+          ),
         ),
       ),
     );

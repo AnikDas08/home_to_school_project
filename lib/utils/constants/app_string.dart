@@ -1,7 +1,7 @@
 class AppString {
   AppString._();
 
-  static const String appName = 'Home To School';
+  static const String appName = 'Home2School';
   static const String home = 'Home';
   static const String liveTracking = 'Live Tracking';
   static const String schoolBus = 'School Bus';
@@ -98,4 +98,7 @@ class AppString {
   static const String walkShare = 'WalkShare';
   static const String walkShareDesc =
       'Safely walking neighborhood students to school';
+  static const String student18Plus = 'Student (18+)';
+  static const String student18PlusDesc =
+      'Book personal rides & walk share for your own school commute';
 }

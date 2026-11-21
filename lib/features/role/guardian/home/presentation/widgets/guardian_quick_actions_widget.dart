@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
 class GuardianQuickActionsWidget extends StatelessWidget {
@@ -21,6 +22,8 @@ class GuardianQuickActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isStudent = LocalStorage.role.toLowerCase().contains('student');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,13 +78,15 @@ class GuardianQuickActionsWidget extends StatelessWidget {
 
         14.height,
 
-        /// Row with "My Children" and "Safety & Help"
+        /// Row with "My Children" (or "Student ID") and "Safety & Help"
         Row(
           children: [
-            /// My Children Card
+            /// Action Card: My Children (Guardian) or Student ID (Student 18+)
             Expanded(
               child: GestureDetector(
-                onTap: onMyChildren ?? () => Get.toNamed(AppRoutes.myChildren),
+                onTap: isStudent
+                    ? (onMyChildren ?? () => Get.toNamed(AppRoutes.studentIdVerification))
+                    : (onMyChildren ?? () => Get.toNamed(AppRoutes.myChildren)),
                 behavior: HitTestBehavior.opaque,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 18.h),
@@ -112,17 +117,19 @@ class GuardianQuickActionsWidget extends StatelessWidget {
                         ),
                         alignment: Alignment.center,
                         child: Icon(
-                          Icons.people_alt_outlined,
+                          isStudent
+                              ? Icons.school_outlined
+                              : Icons.people_alt_outlined,
                           color: const Color(0xFF3B82F6),
                           size: 22.sp,
                         ),
                       ),
                       10.height,
-                      const CommonText(
-                        text: 'My Children',
+                      CommonText(
+                        text: isStudent ? 'Student ID' : 'My Children',
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
+                        color: const Color(0xFF0F172A),
                       ),
                     ],
                   ),

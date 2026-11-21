@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/controller/book_a_ride_controller.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/widgets/book_ride_card_container.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
 
 class BookRidePickupDropoffCard extends StatelessWidget {
@@ -17,8 +18,11 @@ class BookRidePickupDropoffCard extends StatelessWidget {
   }) {
     final title =
         isPickup ? 'Select Pickup Location' : 'Select Drop-off Location';
+    final homeAddress = LocalStorage.myAddress.isNotEmpty
+        ? '${LocalStorage.myAddress} (Home)'
+        : '124 Oxford Street, London (Home)';
     final options = [
-      '124 Oxford Street, London (Home)',
+      homeAddress,
       'Greenfield International School, Gate 2',
       'Sunshine Pre-school, Main Entrance',
       'Central Library, St. Peter Square',
@@ -167,98 +171,124 @@ class BookRidePickupDropoffCard extends StatelessWidget {
               14.height,
 
               /// Pickup Location Row
-              GestureDetector(
-                onTap: () => _showLocationPicker(
-                  context,
-                  controller,
-                  isPickup: true,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
                 ),
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.home_outlined,
-                        size: 19.sp,
-                        color: const Color(0xFF64748B),
-                      ),
-                      10.width,
-                      Expanded(
-                        child: CommonText(
-                          text: controller.pickupLocation ?? 'Pickup location',
-                          fontSize: 13,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.home_outlined,
+                      size: 19.sp,
+                      color: const Color(0xFF64748B),
+                    ),
+                    10.width,
+                    Expanded(
+                      child: TextField(
+                        controller: controller.pickupLocationController,
+                        style: TextStyle(
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w400,
-                          color: controller.pickupLocation == null
-                              ? const Color(0xFF94A3B8)
-                              : const Color(0xFF0F172A),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
+                          color: const Color(0xFF0F172A),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Pickup location',
+                          hintStyle: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8.h),
                         ),
                       ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        size: 19.sp,
-                        color: const Color(0xFF94A3B8),
+                    ),
+                    if (!controller.isOnDemand) ...[
+                      GestureDetector(
+                        onTap: () => _showLocationPicker(
+                          context,
+                          controller,
+                          isPickup: true,
+                        ),
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 6.h),
+                          child: Icon(
+                            Icons.chevron_right_rounded,
+                            size: 20.sp,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                        ),
                       ),
                     ],
-                  ),
+                  ],
                 ),
               ),
 
               10.height,
 
               /// Drop-off Location Row
-              GestureDetector(
-                onTap: () => _showLocationPicker(
-                  context,
-                  controller,
-                  isPickup: false,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
                 ),
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 19.sp,
-                        color: const Color(0xFF64748B),
-                      ),
-                      10.width,
-                      Expanded(
-                        child: CommonText(
-                          text: controller.dropOffLocation ?? 'Drop-off location',
-                          fontSize: 13,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      size: 19.sp,
+                      color: const Color(0xFF64748B),
+                    ),
+                    10.width,
+                    Expanded(
+                      child: TextField(
+                        controller: controller.dropOffLocationController,
+                        style: TextStyle(
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w400,
-                          color: controller.dropOffLocation == null
-                              ? const Color(0xFF94A3B8)
-                              : const Color(0xFF0F172A),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
+                          color: const Color(0xFF0F172A),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Drop-off location',
+                          hintStyle: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8.h),
                         ),
                       ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        size: 19.sp,
-                        color: const Color(0xFF94A3B8),
+                    ),
+                    if (!controller.isOnDemand) ...[
+                      GestureDetector(
+                        onTap: () => _showLocationPicker(
+                          context,
+                          controller,
+                          isPickup: false,
+                        ),
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.w, vertical: 6.h),
+                          child: Icon(
+                            Icons.chevron_right_rounded,
+                            size: 20.sp,
+                            color: const Color(0xFF94A3B8),
+                          ),
+                        ),
                       ),
                     ],
-                  ),
+                  ],
                 ),
               ),
             ],

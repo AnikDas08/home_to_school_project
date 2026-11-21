@@ -15,4 +15,5 @@ class AppImages {
   static const String mapImageShow = '$baseurl/mapimage_show.png';
   static const String pickupProofPhoto = '$baseurl/pickup_proof_photo.png';
   static const String childSeatedPhoto = pickupProofPhoto;
+  static const String greenCheck = '$baseurl/green_check.png';
 }

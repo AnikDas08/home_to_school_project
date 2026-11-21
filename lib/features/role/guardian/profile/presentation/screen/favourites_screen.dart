@@ -170,10 +170,16 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                     ),
                                   ),
                                   6.width,
-                                  Icon(
-                                    Icons.check_circle_rounded,
-                                    size: 15.sp,
-                                    color: const Color(0xFF38BDF8),
+                                  Image.asset(
+                                    AppImages.greenCheck,
+                                    width: 15.sp,
+                                    height: 15.sp,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => Icon(
+                                      Icons.check_circle_rounded,
+                                      size: 15.sp,
+                                      color: const Color(0xFF22C55E),
+                                    ),
                                   ),
                                 ],
                               ),

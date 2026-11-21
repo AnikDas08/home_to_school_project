@@ -191,11 +191,27 @@ class WalkshareDocumentsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonText(
-                      text: doc.title,
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF0F172A),
+                    Text.rich(
+                      TextSpan(
+                        text: doc.title,
+                        style: TextStyle(
+                          fontSize: 14.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF0F172A),
+                        ),
+                        children: [
+                          if (doc.titleSuffix != null &&
+                              doc.titleSuffix!.isNotEmpty)
+                            TextSpan(
+                              text: doc.titleSuffix,
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF64748B),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                     3.height,
                     CommonText(

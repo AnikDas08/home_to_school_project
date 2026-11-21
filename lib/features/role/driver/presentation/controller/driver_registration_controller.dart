@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:home_to_school/config/route/app_routes.dart';
+import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 
 class DriverRegistrationController extends GetxController {
@@ -102,6 +103,10 @@ class DriverRegistrationController extends GetxController {
   }
 
   void submitLicence() {
+    if (LocalStorage.isWalkShare) {
+      Get.toNamed(AppRoutes.walkshareVerification);
+      return;
+    }
     Get.toNamed(AppRoutes.driverVehicleDetails);
   }
 

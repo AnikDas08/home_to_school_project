@@ -88,6 +88,31 @@ class SignUpAllField extends StatelessWidget {
           ),
           validator: AppValidation.required,
         ),
+
+        14.height,
+
+        /// Address Field
+        CommonTextField(
+          controller: controller.addressController,
+          hintText: 'Address',
+          keyboardType: TextInputType.streetAddress,
+          fillColor: AppColors.white,
+          borderColor: AppColors.borderColor,
+          borderRadius: 14,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+          hintTextColor: const Color(0xFF94A3B8),
+          prefixIconConstraints: BoxConstraints(
+            minWidth: 44.w,
+            minHeight: 24.h,
+          ),
+          prefixIcon: Icon(
+            Icons.location_on_outlined,
+            size: 20.sp,
+            color: const Color(0xFF94A3B8),
+          ),
+          validator: AppValidation.required,
+        ),
       ],
     );
   }

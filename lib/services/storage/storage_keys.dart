@@ -8,6 +8,7 @@ class LocalStorageKeys {
   static const String myImage = 'myImage';
   static const String myName = 'myName';
   static const String myEmail = 'myEmail';
+  static const String myAddress = 'myAddress';
   static const String vehicleType = 'vehicleType';
   static const String vehicleMake = 'vehicleMake';
   static const String vehicleModel = 'vehicleModel';

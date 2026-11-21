@@ -72,10 +72,16 @@ class ProviderListItem extends StatelessWidget {
                         ),
                         if (provider.isVerified) ...[
                           6.width,
-                          Icon(
-                            Icons.check_circle_rounded,
-                            size: 16.sp,
-                            color: const Color(0xFF38BDF8),
+                          Image.asset(
+                            AppImages.greenCheck,
+                            width: 16.sp,
+                            height: 16.sp,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => Icon(
+                              Icons.check_circle_rounded,
+                              size: 16.sp,
+                              color: const Color(0xFF22C55E),
+                            ),
                           ),
                         ],
                       ],

@@ -49,7 +49,8 @@ class _SwitchRoleDialogState extends State<SwitchRoleDialog> {
     final isSame = (role == 'Parent' &&
             (currentStored == 'Parent' || currentStored == 'Guardian')) ||
         (role.contains('Driver') && currentStored.contains('Driver')) ||
-        (role.contains('Walk') && currentStored.contains('Walk'));
+        (role.contains('Walk') && currentStored.contains('Walk')) ||
+        (role.contains('Student') && currentStored.contains('Student'));
 
     if (isSame) {
       if (mounted) Navigator.pop(context);
@@ -255,6 +256,21 @@ class _SwitchRoleDialogState extends State<SwitchRoleDialog> {
               iconBgColor: const Color(0xFF059669),
               isActive: _activeRole == 'WalkShare',
               onTap: () => _onSelectRole('WalkShare'),
+            ),
+
+            12.height,
+
+            /// 4. Student (18+)
+            _buildRoleCard(
+              title: 'Student (18+)',
+              iconWidget: Icon(
+                Icons.school_rounded,
+                size: 20.sp,
+                color: Colors.white,
+              ),
+              iconBgColor: const Color(0xFF2563EB),
+              isActive: _activeRole.contains('Student'),
+              onTap: () => _onSelectRole('Student (18+)'),
             ),
           ],
         ),

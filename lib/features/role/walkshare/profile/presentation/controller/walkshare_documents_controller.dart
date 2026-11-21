@@ -7,6 +7,7 @@ import 'package:home_to_school/features/role/walkshare/presentation/controller/w
 class WalkshareDocumentModel {
   final String id;
   final String title;
+  final String? titleSuffix;
   final String subtitle;
   final IconData icon;
   final bool isTwoSided;
@@ -17,6 +18,7 @@ class WalkshareDocumentModel {
   WalkshareDocumentModel({
     required this.id,
     required this.title,
+    this.titleSuffix,
     required this.subtitle,
     required this.icon,
     this.isTwoSided = false,
@@ -49,7 +51,8 @@ class WalkshareDocumentsController extends GetxController {
     documents = [
       WalkshareDocumentModel(
         id: '1',
-        title: 'Driving licence',
+        title: 'Photo IDs',
+        titleSuffix: ' - Driver’s Licence/ PR Card / Passport',
         subtitle: 'Both sides',
         icon: Icons.credit_card_outlined,
         isTwoSided: true,

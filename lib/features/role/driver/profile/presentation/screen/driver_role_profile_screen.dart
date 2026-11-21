@@ -197,10 +197,16 @@ class DriverRoleProfileScreen extends StatelessWidget {
                         ),
                       ),
                       6.width,
-                      Icon(
-                        Icons.check_circle_rounded,
-                        size: 16.sp,
-                        color: const Color(0xFF38BDF8),
+                      Image.asset(
+                        AppImages.greenCheck,
+                        width: 17.sp,
+                        height: 17.sp,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Icon(
+                          Icons.check_circle_rounded,
+                          size: 17.sp,
+                          color: const Color(0xFF22C55E),
+                        ),
                       ),
                     ],
                   ),
