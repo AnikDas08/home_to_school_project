@@ -44,14 +44,11 @@ class GuardianProfileScreen extends StatelessWidget {
           },
         ),
         centerTitle: true,
-        title: CommonText(
-          text: (controller.activeRole.toLowerCase().contains('student') ||
-                  LocalStorage.role.toLowerCase().contains('student'))
-              ? 'Student Profile'
-              : 'Parent Profile',
+        title: const CommonText(
+          text: 'Parent Profile',
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: const Color(0xFF0F172A),
+          color: Color(0xFF0F172A),
         ),
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
@@ -246,9 +243,6 @@ class GuardianProfileScreen extends StatelessWidget {
 
   /// 2. Menu Group 1: Family & Safety
   Widget _buildFamilyGroup(GuardianProfileController controller) {
-    final isStudent = controller.activeRole.toLowerCase().contains('student') ||
-        LocalStorage.role.toLowerCase().contains('student');
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
@@ -268,20 +262,12 @@ class GuardianProfileScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          if (!isStudent)
-            ProfileMenuRow(
-              icon: Icons.people_alt_outlined,
-              title: 'My Children',
-              badgeText: '${controller.childrenCount}',
-              onTap: () => Get.toNamed(AppRoutes.myChildren),
-            ),
-          if (isStudent)
-            ProfileMenuRow(
-              icon: Icons.school_outlined,
-              title: 'Student ID & Enrollment',
-              badgeText: 'Verified',
-              onTap: () => Get.toNamed(AppRoutes.studentIdVerification),
-            ),
+          ProfileMenuRow(
+            icon: Icons.people_alt_outlined,
+            title: 'My Children',
+            badgeText: '${controller.childrenCount}',
+            onTap: () => Get.toNamed(AppRoutes.myChildren),
+          ),
           ProfileMenuRow(
             icon: Icons.location_on_outlined,
             title: 'Saved Locations',

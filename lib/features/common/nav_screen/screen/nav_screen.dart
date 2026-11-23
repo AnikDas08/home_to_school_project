@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/features/common/nav_screen/controller/nav_controller.dart';
 import 'package:home_to_school/features/role/guardian/booking/presentation/screen/guardian_booking_screen.dart';
-import 'package:home_to_school/features/role/guardian/home/presentation/screen/all_trips_screen.dart';
 import 'package:home_to_school/features/role/guardian/home/presentation/screen/home_screen.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/screen/guardian_profile_screen.dart';
 import 'package:home_to_school/features/message/presentation/chat_list/screen/chat_screen.dart';
@@ -15,7 +13,9 @@ import 'package:home_to_school/features/role/driver/profile/presentation/screen/
 import 'package:home_to_school/features/role/walkshare/home/presentation/screen/walkshare_home_screen.dart';
 import 'package:home_to_school/features/role/walkshare/schedule/presentation/screen/walkshare_schedule_screen.dart';
 import 'package:home_to_school/features/role/walkshare/profile/presentation/screen/walkshare_profile_screen.dart';
-import 'package:home_to_school/features/profile/presentation/screen/profile_screen.dart';
+import 'package:home_to_school/features/role/student/home/presentation/screen/student_home_screen.dart';
+import 'package:home_to_school/features/role/student/booking/presentation/screen/student_bookings_screen.dart';
+import 'package:home_to_school/features/role/student/profile/presentation/screen/student_profile_screen.dart';
 import 'package:home_to_school/services/storage/storage_services.dart';
 
 class _RoleNavItem {
@@ -69,13 +69,11 @@ class _NavScreenState extends State<NavScreen> {
     return role.toLowerCase();
   }
 
-  bool get _isDriver => _currentRole.contains('driver');
-  bool get _isWalkShare => _currentRole.contains('walk');
-
   List<_RoleNavItem> _getNavItems([String? activeRole]) {
     final role = (activeRole ?? _currentRole).toLowerCase();
     final isDriver = role.contains('driver');
     final isWalkShare = role.contains('walk');
+    final isStudent = role.contains('student');
 
     if (isDriver) {
       return const [
@@ -131,6 +129,35 @@ class _NavScreenState extends State<NavScreen> {
           activeIcon: Icons.person_rounded,
           inactiveIcon: Icons.person_outline_rounded,
           screen: WalkshareProfileScreen(isTab: true),
+        ),
+      ];
+    }
+
+    if (isStudent) {
+      return const [
+        _RoleNavItem(
+          label: 'Home',
+          activeIcon: Icons.home_rounded,
+          inactiveIcon: Icons.home_outlined,
+          screen: StudentHomeScreen(),
+        ),
+        _RoleNavItem(
+          label: 'Bookings',
+          activeIcon: Icons.calendar_month_rounded,
+          inactiveIcon: Icons.calendar_month_outlined,
+          screen: StudentBookingsScreen(isTab: true),
+        ),
+        _RoleNavItem(
+          label: 'Messages',
+          activeIcon: Icons.chat_bubble_rounded,
+          inactiveIcon: Icons.chat_bubble_outline_rounded,
+          screen: ChatListScreen(isTab: true),
+        ),
+        _RoleNavItem(
+          label: 'Profile',
+          activeIcon: Icons.person_rounded,
+          inactiveIcon: Icons.person_outline_rounded,
+          screen: StudentProfileScreen(isTab: true),
         ),
       ];
     }

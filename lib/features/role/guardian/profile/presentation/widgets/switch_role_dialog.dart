@@ -8,6 +8,7 @@ import 'package:home_to_school/features/common/nav_screen/controller/nav_control
 import 'package:home_to_school/features/role/driver/profile/presentation/controller/driver_role_profile_controller.dart';
 import 'package:home_to_school/features/role/guardian/profile/presentation/controller/guardian_profile_controller.dart';
 import 'package:home_to_school/features/role/walkshare/profile/presentation/controller/walkshare_profile_controller.dart';
+import 'package:home_to_school/features/role/student/profile/presentation/controller/student_profile_controller.dart';
 import 'package:home_to_school/services/storage/storage_services.dart';
 import 'package:home_to_school/utils/app_snackbar.dart';
 import 'package:home_to_school/utils/extensions/extension.dart';
@@ -136,6 +137,11 @@ class _SwitchRoleDialogState extends State<SwitchRoleDialog> {
       final walkCtrl = Get.find<WalkshareProfileController>();
       walkCtrl.activeRole = role;
       walkCtrl.update();
+    }
+    if (Get.isRegistered<StudentProfileController>()) {
+      final studentCtrl = Get.find<StudentProfileController>();
+      studentCtrl.activeRole = role;
+      studentCtrl.update();
     }
 
     // Dismiss the adaptive progress indicator dialog

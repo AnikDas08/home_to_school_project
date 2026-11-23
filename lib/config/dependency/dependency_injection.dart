@@ -12,6 +12,9 @@ import '../../features/notifications/presentation/controller/notifications_contr
 import '../../features/profile/presentation/controller/profile_controller.dart';
 import '../../features/role/guardian/booking/presentation/controller/guardian_booking_controller.dart';
 import '../../features/role/guardian/profile/presentation/controller/guardian_profile_controller.dart';
+import '../../features/role/student/home/presentation/controller/student_home_controller.dart';
+import '../../features/role/student/booking/presentation/controller/student_bookings_controller.dart';
+import '../../features/role/student/profile/presentation/controller/student_profile_controller.dart';
 
 class DependencyInjection extends Bindings {
   @override
@@ -19,6 +22,9 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => NavController(), fenix: true);
     Get.lazyPut(() => GuardianBookingController(), fenix: true);
     Get.lazyPut(() => GuardianProfileController(), fenix: true);
+    Get.lazyPut(() => StudentHomeController(), fenix: true);
+    Get.lazyPut(() => StudentBookingsController(), fenix: true);
+    Get.lazyPut(() => StudentProfileController(), fenix: true);
     Get.lazyPut(() => RoleSelectionController(), fenix: true);
     Get.lazyPut(() => SignUpController(), fenix: true);
     Get.lazyPut(() => SignInController(), fenix: true);

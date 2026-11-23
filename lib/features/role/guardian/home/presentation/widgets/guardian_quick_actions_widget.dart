@@ -22,8 +22,6 @@ class GuardianQuickActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isStudent = LocalStorage.role.toLowerCase().contains('student');
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -81,12 +79,10 @@ class GuardianQuickActionsWidget extends StatelessWidget {
         /// Row with "My Children" (or "Student ID") and "Safety & Help"
         Row(
           children: [
-            /// Action Card: My Children (Guardian) or Student ID (Student 18+)
+            /// Action Card: My Children
             Expanded(
               child: GestureDetector(
-                onTap: isStudent
-                    ? (onMyChildren ?? () => Get.toNamed(AppRoutes.studentIdVerification))
-                    : (onMyChildren ?? () => Get.toNamed(AppRoutes.myChildren)),
+                onTap: onMyChildren ?? () => Get.toNamed(AppRoutes.myChildren),
                 behavior: HitTestBehavior.opaque,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 18.h),
@@ -117,19 +113,17 @@ class GuardianQuickActionsWidget extends StatelessWidget {
                         ),
                         alignment: Alignment.center,
                         child: Icon(
-                          isStudent
-                              ? Icons.school_outlined
-                              : Icons.people_alt_outlined,
+                          Icons.people_alt_outlined,
                           color: const Color(0xFF3B82F6),
                           size: 22.sp,
                         ),
                       ),
                       10.height,
-                      CommonText(
-                        text: isStudent ? 'Student ID' : 'My Children',
+                      const CommonText(
+                        text: 'My Children',
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF0F172A),
+                        color: Color(0xFF0F172A),
                       ),
                     ],
                   ),

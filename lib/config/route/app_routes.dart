@@ -19,6 +19,12 @@ import 'package:home_to_school/features/role/driver/presentation/screen/driver_l
 import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_details_screen.dart';
 import 'package:home_to_school/features/role/driver/presentation/screen/vehicle_insurance_screen.dart';
 import 'package:home_to_school/features/role/student/presentation/screen/student_id_verification_screen.dart';
+import 'package:home_to_school/features/role/student/home/presentation/screen/student_home_screen.dart';
+import 'package:home_to_school/features/role/student/booking/presentation/screen/student_bookings_screen.dart';
+import 'package:home_to_school/features/role/student/booking/presentation/screen/student_book_a_ride_screen.dart';
+import 'package:home_to_school/features/role/student/booking/presentation/screen/student_ride_details_screen.dart';
+import 'package:home_to_school/features/role/student/profile/presentation/screen/student_profile_screen.dart';
+import 'package:home_to_school/features/role/student/profile/presentation/screen/student_campus_details_screen.dart';
 import 'package:home_to_school/features/role/driver/home/presentation/screen/driver_home_screen.dart';
 import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_requests_screen.dart';
 import 'package:home_to_school/features/role/driver/requests/presentation/screen/driver_request_details_screen.dart';
@@ -87,6 +93,12 @@ class AppRoutes {
   static const String tripDetails = '/trip-details';
   static const String guardianLiveTrack = '/guardian-live-track';
   static const String studentIdVerification = '/student-id-verification';
+  static const String studentHome = '/student-home';
+  static const String studentBookings = '/student-bookings';
+  static const String studentBookRide = '/student-book-ride';
+  static const String studentRideDetails = '/student-ride-details';
+  static const String studentProfile = '/student-profile';
+  static const String studentCampusDetails = '/student-campus-details';
   static const String driverLicence = '/driver-licence';
   static const String driverVehicleDetails = '/driver-vehicle-details';
   static const String driverVehicleInsurance = '/driver-vehicle-insurance';
@@ -160,6 +172,12 @@ class AppRoutes {
     GetPage(name: tripDetails, page: () => const GuardianTripDetailsScreen()),
     GetPage(name: guardianLiveTrack, page: () => const GuardianLiveTrackScreen()),
     GetPage(name: studentIdVerification, page: () => const StudentIdVerificationScreen()),
+    GetPage(name: studentHome, page: () => const StudentHomeScreen()),
+    GetPage(name: studentBookings, page: () => const StudentBookingsScreen()),
+    GetPage(name: studentBookRide, page: () => const StudentBookARideScreen()),
+    GetPage(name: studentRideDetails, page: () => const StudentRideDetailsScreen()),
+    GetPage(name: studentProfile, page: () => const StudentProfileScreen()),
+    GetPage(name: studentCampusDetails, page: () => const StudentCampusDetailsScreen()),
     GetPage(name: driverLicence, page: () => const DriverLicenceScreen()),
     GetPage(name: driverVehicleDetails, page: () => const VehicleDetailsScreen()),
     GetPage(name: driverVehicleInsurance, page: () => const VehicleInsuranceScreen()),

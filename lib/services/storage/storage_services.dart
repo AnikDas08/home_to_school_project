@@ -38,10 +38,10 @@ class LocalStorage {
   static SharedPreferences? preferences;
 
   static bool get isChef => myRole.toLowerCase() == 'chef';
-  static bool get isParent => (myRole.toLowerCase() == 'parent' || myRole.isEmpty) && !isDriver && !isWalkShare;
-  static bool get isDriver => myRole.toLowerCase() == 'driver' || role.toLowerCase() == 'driver';
+  static bool get isParent => (myRole.toLowerCase() == 'parent' || myRole.isEmpty) && !isDriver && !isWalkShare && !isStudent;
+  static bool get isDriver => myRole.toLowerCase().contains('driver') || role.toLowerCase().contains('driver');
   static bool get isWalkShare => myRole.toLowerCase().contains('walk') || role.toLowerCase().contains('walk');
-  static bool get isStudent => myRole.toLowerCase() == 'student';
+  static bool get isStudent => myRole.toLowerCase().contains('student') || role.toLowerCase().contains('student');
 
   static Future<SharedPreferences> _getStorage() async {
     preferences ??= await SharedPreferences.getInstance();

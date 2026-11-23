@@ -11,8 +11,6 @@ class GuardianSafeRideBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isStudent = LocalStorage.role.toLowerCase().contains('student');
-
     return Container(
       height: 148.h,
       width: double.infinity,
@@ -99,13 +97,11 @@ class GuardianSafeRideBanner extends StatelessWidget {
                             6.height,
                             SizedBox(
                               width: maxTextWidth,
-                              child: CommonText(
-                                text: isStudent
-                                    ? "Trusted school transport for your everyday journey"
-                                    : "Trusted school transport for your child's everyday journey",
+                              child: const CommonText(
+                                text: "Trusted school transport for your child's everyday journey",
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
-                                color: const Color(0xFF475569),
+                                color: Color(0xFF475569),
                                 textAlign: TextAlign.start,
                                 maxLines: 3,
                               ),
