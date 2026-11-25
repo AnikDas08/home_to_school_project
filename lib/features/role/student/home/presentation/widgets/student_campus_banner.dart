@@ -41,7 +41,7 @@ class StudentCampusBanner extends StatelessWidget {
             left: 0,
             top: 0,
             bottom: 0,
-            width: 250.w,
+            width: 230.w,
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -50,16 +50,16 @@ class StudentCampusBanner extends StatelessWidget {
                   colors: [
                     Colors.white,
                     Colors.white.withValues(alpha: 0.96),
-                    Colors.white.withValues(alpha: 0.88),
+                    Colors.white.withValues(alpha: 0.85),
                     Colors.white.withValues(alpha: 0.0),
                   ],
-                  stops: const [0.0, 0.60, 0.82, 1.0],
+                  stops: const [0.0, 0.55, 0.80, 1.0],
                 ),
               ),
             ),
           ),
 
-          /// Typography content over the left section
+          /// Typography content over the left section with responsive scaling
           Positioned.fill(
             child: Align(
               alignment: Alignment.centerLeft,
@@ -67,70 +67,47 @@ class StudentCampusBanner extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final maxTextWidth = constraints.maxWidth * 0.62;
+                    final maxTextWidth = constraints.maxWidth * 0.58;
 
                     return SizedBox(
                       width: maxTextWidth,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEFF6FF),
-                              borderRadius: BorderRadius.circular(6.r),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CommonText(
+                              text: 'Safe Ride',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF0F172A),
+                              textAlign: TextAlign.start,
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.verified_user_rounded,
-                                  size: 11.sp,
-                                  color: const Color(0xFF1E3A8A),
-                                ),
-                                4.width,
-                                Text(
-                                  'STUDENT COMMUTE PASS',
-                                  style: TextStyle(
-                                    fontSize: 9.5.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF1E3A8A),
-                                    letterSpacing: 0.4,
-                                  ),
-                                ),
-                              ],
+                            2.height,
+                            const CommonText(
+                              text: 'Brighter Future',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFEA580C),
+                              textAlign: TextAlign.start,
                             ),
-                          ),
-                          6.height,
-                          const CommonText(
-                            text: 'Direct to Campus',
-                            fontSize: 17.5,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF0F172A),
-                            textAlign: TextAlign.start,
-                          ),
-                          2.height,
-                          const CommonText(
-                            text: 'Safe & On-Time',
-                            fontSize: 17.5,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF10B981),
-                            textAlign: TextAlign.start,
-                          ),
-                          6.height,
-                          Text(
-                            'Personal rides & verified walk shares for your college commute.',
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xFF64748B),
-                              height: 1.25,
+                            6.height,
+                            SizedBox(
+                              width: maxTextWidth,
+                              child: const CommonText(
+                                text:
+                                    'Trusted school transport for your everyday journey',
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF475569),
+                                textAlign: TextAlign.start,
+                                maxLines: 3,
+                              ),
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -143,4 +120,3 @@ class StudentCampusBanner extends StatelessWidget {
     );
   }
 }
-

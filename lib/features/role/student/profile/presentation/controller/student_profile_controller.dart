@@ -53,12 +53,12 @@ class StudentProfileController extends GetxController {
     Get.toNamed(AppRoutes.studentIdVerification);
   }
 
-  void openCampusDetails() {
-    Get.toNamed(AppRoutes.studentCampusDetails);
-  }
-
   void openSavedLocations() {
     Get.toNamed(AppRoutes.savedLocations);
+  }
+
+  void openFavourites() {
+    Get.toNamed(AppRoutes.favourites);
   }
 
   void openEmergencyContacts() {
@@ -77,61 +77,70 @@ class StudentProfileController extends GetxController {
     Get.toNamed(AppRoutes.faq);
   }
 
+  void openPrivacyPolicy() {
+    Get.toNamed(AppRoutes.privacyPolicy);
+  }
+
+  void openTermsOfService() {
+    Get.toNamed(AppRoutes.termsOfServices);
+  }
+
+  void openAbout() {
+    Get.toNamed(AppRoutes.about);
+  }
+
   void showSwitchRole(BuildContext context) {
     SwitchRoleDialog.show(context);
   }
 
-  Future<void> logout(BuildContext context) async {
-    final shouldLogout = await showDialog<bool>(
+  void logout(BuildContext context) {
+    showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(16),
         ),
         title: const Text(
           'Log Out',
           style: TextStyle(
-            fontSize: 18,
             fontWeight: FontWeight.w700,
             color: Color(0xFF0F172A),
           ),
         ),
         content: const Text(
-          'Are you sure you want to log out of Home2School?',
+          'Are you sure you want to log out of your account?',
           style: TextStyle(
-            fontSize: 14,
             color: Color(0xFF64748B),
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF4444),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: Color(0xFF64748B),
+                fontWeight: FontWeight.w600,
               ),
             ),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Log Out'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              await LocalStorage.removeAllPrefData();
+            },
+            child: const Text(
+              'Log Out',
+              style: TextStyle(
+                color: Color(0xFFEF4444),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),
     );
-
-    if (shouldLogout == true) {
-      await LocalStorage.removeAllPrefData();
-      Get.offAllNamed(AppRoutes.signIn);
-      AppSnackbar.success(
-        title: 'Logged Out',
-        message: 'You have been logged out successfully.',
-      );
-    }
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import 'package:home_to_school/component/text/common_text.dart';
 import 'package:home_to_school/features/role/student/booking/presentation/controller/student_ride_details_controller.dart';
 import 'package:home_to_school/utils/constants/app_images.dart';
@@ -12,12 +11,12 @@ class StudentRideDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(StudentRideDetailsController());
+    final controller = Get.put(StudentRideDetailsController());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8FAFC),
 
-      /// App Bar
+      /// App Bar: "Trip Details" with SOS button
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -32,11 +31,54 @@ class StudentRideDetailsScreen extends StatelessWidget {
         ),
         centerTitle: true,
         title: const CommonText(
-          text: 'Ride Details',
+          text: 'Trip Details',
           fontSize: 18,
           fontWeight: FontWeight.w700,
           color: Color(0xFF0F172A),
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 16.w),
+            child: GestureDetector(
+              onTap: controller.onSos,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEF4444),
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFEF4444).withValues(alpha: 0.35),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.shield_outlined,
+                      color: Colors.white,
+                      size: 14.sp,
+                    ),
+                    4.width,
+                    Text(
+                      'SOS',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(
@@ -47,348 +89,57 @@ class StudentRideDetailsScreen extends StatelessWidget {
         ),
       ),
 
-      /// Body
+      /// Body Content (Same as Parent Trip Details, without Children section & Pickup/Drop-off photos)
       body: SafeArea(
-        child: GetBuilder<StudentRideDetailsController>(
-          builder: (ctrl) {
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// 1. Status & Booking ID Card
-                  Container(
-                    padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'BOOKING ID',
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF1E3A8A),
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            3.height,
-                            CommonText(
-                              text: ctrl.bookingId,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: const Color(0xFF0F172A),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF10B981),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Text(
-                            ctrl.status,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// 1. Timeline Card
+              _buildTimelineCard(),
 
-                  16.height,
+              12.height,
 
-                  /// 2. Live Tracking Action Button
-                  GestureDetector(
-                    onTap: ctrl.openLiveTracking,
-                    behavior: HitTestBehavior.opaque,
-                    child: Container(
-                      height: 48.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1B2B68),
-                        borderRadius: BorderRadius.circular(12.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF1B2B68).withValues(alpha: 0.25),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.near_me_rounded, color: Colors.white, size: 18.sp),
-                          8.width,
-                          const CommonText(
-                            text: 'Live Track Ride',
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              /// 2. Driver & Vehicle Card
+              _buildDriverAndVehicleCard(controller),
 
-                  16.height,
+              12.height,
 
-                  /// 3. Route Card
-                  _buildCard(
-                    title: 'Route & Schedule',
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${ctrl.date} • ${ctrl.pickupTime}',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF0F172A),
-                          ),
-                        ),
-                        14.height,
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  width: 12.w,
-                                  height: 12.w,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF10B981),
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                Container(
-                                  width: 2.w,
-                                  height: 30.h,
-                                  color: const Color(0xFFCBD5E1),
-                                ),
-                                Container(
-                                  width: 12.w,
-                                  height: 12.w,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFFEA580C),
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            12.width,
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CommonText(
-                                    text: ctrl.pickupAddress,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF0F172A),
-                                  ),
-                                  22.height,
-                                  CommonText(
-                                    text: ctrl.dropoffAddress,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF0F172A),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+              /// 3. Pricing Card ($135/Month)
+              _buildPricingCard(),
 
-                  16.height,
+              12.height,
 
-                  /// 4. Provider / Driver Card
-                  _buildCard(
-                    title: 'Assigned Provider',
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 22.r,
-                          backgroundColor: const Color(0xFFEFF6FF),
-                          child: Icon(
-                            Icons.person_rounded,
-                            size: 24.sp,
-                            color: const Color(0xFF1B2B68),
-                          ),
-                        ),
-                        12.width,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: CommonText(
-                                      text: ctrl.driverName,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF0F172A),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  4.width,
-                                  Icon(Icons.star_rounded, size: 14.sp, color: const Color(0xFFF59E0B)),
-                                  Text(
-                                    ctrl.driverRating,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF475569),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              3.height,
-                              Text(
-                                '${ctrl.vehicle} (${ctrl.plate})',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: const Color(0xFF64748B),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.chat_bubble_outline_rounded),
-                          color: const Color(0xFF1B2B68),
-                          onPressed: ctrl.openChat,
-                        ),
-                      ],
-                    ),
-                  ),
+              /// 4. Additional Notes Card
+              _buildNotesCard(),
 
-                  16.height,
+              12.height,
 
-                  /// 5. Passenger Card (Self Student)
-                  _buildCard(
-                    title: 'Student Passenger',
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20.r,
-                          backgroundColor: const Color(0xFFEFF6FF),
-                          child: Icon(Icons.school_rounded, size: 20.sp, color: const Color(0xFF1B2B68)),
-                        ),
-                        12.width,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: CommonText(
-                                      text: ctrl.studentName,
-                                      fontSize: 13.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color(0xFF0F172A),
-                                    ),
-                                  ),
-                                  6.width,
-                                  Image.asset(
-                                    AppImages.greenCheck,
-                                    width: 14.sp,
-                                    height: 14.sp,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, __, ___) => Icon(
-                                      Icons.check_circle_rounded,
-                                      size: 14.sp,
-                                      color: const Color(0xFF22C55E),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              2.height,
-                              Text(
-                                '${ctrl.campus} • ID: ${ctrl.studentId}',
-                                style: TextStyle(fontSize: 11.5.sp, color: const Color(0xFF64748B)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              /// 5. Schedule Card
+              _buildScheduleCard(),
 
-                  16.height,
+              12.height,
 
-                  /// 6. Payment & Fare Card
-                  _buildCard(
-                    title: 'Payment Details',
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const CommonText(
-                          text: 'Total Paid (Personal Ride)',
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF64748B),
-                        ),
-                        Text(
-                          ctrl.fare,
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w800,
-                            color: const Color(0xFF0F172A),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              /// 6. Manage Booking Card
+              _buildManageBookingCard(),
 
-                  20.height,
+              20.height,
 
-                  /// Cancel Ride Button
-                  Center(
-                    child: TextButton(
-                      onPressed: ctrl.cancelRide,
-                      child: Text(
-                        'Cancel This Ride',
-                        style: TextStyle(
-                          fontSize: 13.5.sp,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFEF4444),
-                        ),
-                      ),
-                    ),
-                  ),
+              /// 7. Bottom Actions: Track live vehicle & Cancel
+              _buildActionButtons(context, controller),
 
-                  16.height,
-                ],
-              ),
-            );
-          },
+              24.height,
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCard({required String title, required Widget child}) {
+  /// 1. Timeline Card with Picked up, In Transit, Scheduled
+  Widget _buildTimelineCard() {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -396,27 +147,646 @@ class StudentRideDetailsScreen extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x04000000),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          /// Stop 1: Pickup from Home
+          _buildTimelineStop(
+            time: '07:30 AM',
+            title: 'Pickup from Home',
+            subtitle: '12 Elm Street, Toronto, ON',
+            status: 'Picked up',
+            statusBgColor: const Color(0xFFDCFCE7),
+            statusTextColor: const Color(0xFF16A34A),
+            dotColor: const Color(0xFF10B981),
+            isFirst: true,
+          ),
+
+          /// Connector
+          _buildDottedConnector(),
+
+          /// Stop 2: Drop at Campus
+          _buildTimelineStop(
+            time: '07:45 AM',
+            title: 'Drop at Campus',
+            subtitle: 'Seneca College - Newnham Campus',
+            status: 'In Transit',
+            statusBgColor: const Color(0xFFEFF6FF),
+            statusTextColor: const Color(0xFF2563EB),
+            dotColor: const Color(0xFF2563EB),
+          ),
+
+          /// Connector
+          _buildDottedConnector(),
+
+          /// Stop 3: Return to Home
+          _buildTimelineStop(
+            time: '01:00 PM',
+            title: 'Return to Home',
+            subtitle: 'Drop-off at 12 Elm Street, Toronto, ON',
+            status: 'Scheduled',
+            statusBgColor: const Color(0xFFF1F5F9),
+            statusTextColor: const Color(0xFF64748B),
+            dotColor: const Color(0xFF3B82F6),
+            isLast: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimelineStop({
+    required String time,
+    required String title,
+    required String subtitle,
+    required String status,
+    required Color statusBgColor,
+    required Color statusTextColor,
+    required Color dotColor,
+    bool isFirst = false,
+    bool isLast = false,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Dot indicator
+        Padding(
+          padding: EdgeInsets.only(top: 4.h),
+          child: Container(
+            width: 14.w,
+            height: 14.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: dotColor, width: 3),
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        12.width,
+
+        /// Stop info
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommonText(
+                text: time,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF0F172A),
+              ),
+              2.height,
+              CommonText(
+                text: title,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1E293B),
+              ),
+              2.height,
+              CommonText(
+                text: subtitle,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF64748B),
+                maxLines: 1,
+              ),
+            ],
+          ),
+        ),
+
+        /// Status Badge
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+          decoration: BoxDecoration(
+            color: statusBgColor,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: CommonText(
+            text: status,
+            fontSize: 11.5,
+            fontWeight: FontWeight.w600,
+            color: statusTextColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDottedConnector() {
+    return Padding(
+      padding: EdgeInsets.only(left: 6.w),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          width: 2,
+          height: 20.h,
+          color: const Color(0xFFCBD5E1),
+        ),
+      ),
+    );
+  }
+
+  /// 2. Driver & Vehicle Card
+  Widget _buildDriverAndVehicleCard(StudentRideDetailsController controller) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          /// Driver Row
+          Row(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  CircleAvatar(
+                    radius: 24.r,
+                    backgroundImage: const AssetImage(AppImages.profileImage),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: 12.w,
+                      height: 12.w,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF10B981),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              12.width,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const CommonText(
+                          text: 'Tariq Ahmed',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF0F172A),
+                        ),
+                        4.width,
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 18,
+                          color: Color(0xFF64748B),
+                        ),
+                      ],
+                    ),
+                    3.height,
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 15,
+                          color: Color(0xFFFBBF24),
+                        ),
+                        4.width,
+                        const CommonText(
+                          text: '4.9 (128 trips)',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF64748B),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              /// Call Button
+              GestureDetector(
+                onTap: controller.onCallDriver,
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  width: 38.w,
+                  height: 38.w,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF1F5F9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.call_outlined,
+                      size: 18,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                ),
+              ),
+
+              10.width,
+
+              /// Message Button
+              GestureDetector(
+                onTap: controller.onMessageDriver,
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  width: 38.w,
+                  height: 38.w,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF1F5F9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.chat_bubble_outline_rounded,
+                      size: 18,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          14.height,
+          const Divider(height: 1, thickness: 1, color: Color(0xFFF1F5F9)),
+          14.height,
+
+          /// Vehicle Row
+          Row(
+            children: [
+              Container(
+                width: 44.w,
+                height: 36.h,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: const Icon(
+                  Icons.directions_car_filled_rounded,
+                  color: Color(0xFF64748B),
+                  size: 24,
+                ),
+              ),
+              12.width,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CommonText(
+                      text: 'Toyota Sienna',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F172A),
+                    ),
+                    2.height,
+                    const CommonText(
+                      text: 'SCH-4091 • White • 4 Seater',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF64748B),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: Color(0xFF94A3B8),
+                size: 20,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 3. Pricing Card
+  Widget _buildPricingCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonText(
-            text: title,
-            fontSize: 14.5,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF0F172A),
+          const CommonText(
+            text: '\$135/Month',
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: Color(0xFF0F172A),
           ),
-          12.height,
-          child,
+          4.height,
+          const CommonText(
+            text: 'Agreed rate • Paid directly to Tariq',
+            fontSize: 12.5,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF64748B),
+          ),
         ],
       ),
+    );
+  }
+
+  /// 4. Additional Notes Card
+  Widget _buildNotesCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 38.w,
+            height: 38.w,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Icon(
+              Icons.info_outline_rounded,
+              size: 20.sp,
+              color: const Color(0xFF1E3A8A),
+            ),
+          ),
+          12.width,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CommonText(
+                  text: 'Additional Notes',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+                4.height,
+                const CommonText(
+                  text:
+                      'Gate 3 (Main Campus Pickup) • Driver will wait 5 mins at home',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF64748B),
+                  textAlign: TextAlign.start,
+                  maxLines: 3,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 5. Schedule Card
+  Widget _buildScheduleCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38.w,
+            height: 38.w,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Icon(
+              Icons.calendar_month_outlined,
+              size: 20.sp,
+              color: const Color(0xFF1E3A8A),
+            ),
+          ),
+          12.width,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CommonText(
+                  text: 'Schedule',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+                2.height,
+                const CommonText(
+                  text: 'Repeats every Mon - Fri • Until Dec 31, 2026',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF64748B),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.chevron_right_rounded,
+            color: Color(0xFF94A3B8),
+            size: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 6. Manage Booking Card
+  Widget _buildManageBookingCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18.r),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38.w,
+            height: 38.w,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Icon(
+              Icons.edit_outlined,
+              size: 20.sp,
+              color: const Color(0xFF1E3A8A),
+            ),
+          ),
+          12.width,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CommonText(
+                  text: 'Manage Booking',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+                2.height,
+                const CommonText(
+                  text: 'Rate agreed: \$135/week • Direct payment',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF64748B),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.chevron_right_rounded,
+            color: Color(0xFF94A3B8),
+            size: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 7. Bottom Actions: Track live vehicle & Cancel
+  Widget _buildActionButtons(
+      BuildContext context, StudentRideDetailsController controller) {
+    return Column(
+      children: [
+        /// Track live vehicle (Navy blue)
+        GestureDetector(
+          onTap: controller.onTrackLiveVehicle,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            height: 50.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color(0xFF1B2B68),
+              borderRadius: BorderRadius.circular(14.r),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1B2B68).withValues(alpha: 0.25),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.location_on_outlined,
+                  size: 19.sp,
+                  color: Colors.white,
+                ),
+                8.width,
+                const CommonText(
+                  text: 'Track live vehicle',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        12.height,
+
+        /// Cancel This Booking (Light red outlined)
+        GestureDetector(
+          onTap: () => controller.onCancelBooking(context),
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            height: 50.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFEF2F2),
+              borderRadius: BorderRadius.circular(14.r),
+              border: Border.all(
+                color: const Color(0xFFFEE2E2),
+                width: 1.0,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cancel_outlined,
+                  size: 18.sp,
+                  color: const Color(0xFFEF4444),
+                ),
+                8.width,
+                const CommonText(
+                  text: 'Cancel This Booking',
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFEF4444),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

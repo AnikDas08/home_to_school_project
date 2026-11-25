@@ -1,54 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:home_to_school/config/route/app_routes.dart';
-import 'package:home_to_school/utils/app_snackbar.dart';
 
 class StudentRideDetailsController extends GetxController {
   static StudentRideDetailsController get instance =>
       Get.find<StudentRideDetailsController>();
 
-  String bookingId = 'SB-1092';
-  String status = 'Confirmed';
-  String serviceType = 'Carpool Ride';
-  String date = 'Monday, Nov 24, 2026';
-  String pickupTime = '08:15 AM';
-  String pickupAddress = '18 Maple Avenue, Toronto, ON';
-  String dropoffAddress = 'Seneca College - Newnham Campus, Gate 3';
-  String driverName = 'David Miller';
-  String driverRating = '4.95';
-  String driverPhone = '+1 (416) 555-0182';
-  String vehicle = 'Toyota Sienna (2023) • Silver';
-  String plate = 'SCH-4091';
-  String fare = '\$14.50';
-  String studentName = 'Alex Morgan';
-  String studentId = 'STU-992184';
-  String campus = 'Seneca College';
+  void onCallDriver() async {
+    const phoneNumber = '+14165550199';
+    try {
+      const channel = MethodChannel('plugins.flutter.io/url_launcher');
+      await channel.invokeMethod('launch', {
+        'url': 'tel:$phoneNumber',
+        'useSafariVC': false,
+        'useWebView': false,
+        'enableJavaScript': false,
+        'enableDomStorage': false,
+        'universalLinksOnly': false,
+        'headers': {},
+      });
+    } catch (_) {}
 
-  @override
-  void onInit() {
-    super.onInit();
-    if (Get.arguments != null && Get.arguments is Map) {
-      if (Get.arguments['bookingId'] != null) {
-        bookingId = Get.arguments['bookingId'];
-      }
-    }
+    Get.snackbar(
+      'Calling Driver',
+      'Connecting to Tariq Ahmed ($phoneNumber)...',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: const Color(0xFF1B2B68),
+      colorText: Colors.white,
+      duration: const Duration(seconds: 3),
+      margin: const EdgeInsets.all(16),
+      borderRadius: 14,
+      icon: const Icon(Icons.phone_in_talk_rounded, color: Colors.white),
+    );
   }
 
-  void openLiveTracking() {
+  void onMessageDriver() {
+    Get.toNamed(
+      AppRoutes.message,
+      parameters: {
+        'name': 'Tariq Ahmed',
+        'chatId': '1',
+      },
+    );
+  }
+
+  void onTrackLiveVehicle() {
     Get.toNamed(AppRoutes.guardianLiveTrack);
   }
 
-  void openChat() {
-    Get.toNamed(AppRoutes.message);
+  void onSos() {
+    Get.toNamed(AppRoutes.sos);
   }
 
-  void cancelRide() {
-    AppSnackbar.success(
-      title: 'Ride Cancelled',
-      message: 'Your campus ride $bookingId has been cancelled.',
+  void onCancelBooking(BuildContext context) {
+    Get.defaultDialog(
+      title: 'Cancel Booking',
+      titleStyle: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        color: Color(0xFFEF4444),
+      ),
+      middleText:
+          'Are you sure you want to cancel this booking with Tariq Ahmed?',
+      middleTextStyle: const TextStyle(
+        fontSize: 14,
+        color: Color(0xFF64748B),
+      ),
+      textConfirm: 'Yes, Cancel',
+      confirmTextColor: Colors.white,
+      buttonColor: const Color(0xFFEF4444),
+      textCancel: 'Keep Booking',
+      cancelTextColor: const Color(0xFF64748B),
+      radius: 16,
+      onConfirm: () {
+        Get.back(); // close dialog
+        Get.back(); // return to bookings list
+        Get.snackbar(
+          'Booking Cancelled',
+          'This trip booking has been cancelled.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: const Color(0xFF1B2B68),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+        );
+      },
     );
-    Future.delayed(const Duration(milliseconds: 600), () {
-      Get.back();
-    });
   }
 }
-

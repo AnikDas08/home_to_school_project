@@ -38,7 +38,7 @@ class StudentBookingsScreen extends StatelessWidget {
               ),
         centerTitle: true,
         title: const CommonText(
-          text: 'My Campus Rides',
+          text: 'My Bookings',
           fontSize: 18,
           fontWeight: FontWeight.w700,
           color: Color(0xFF0F172A),
@@ -53,14 +53,14 @@ class StudentBookingsScreen extends StatelessWidget {
         ),
       ),
 
-      /// Body with Segmented Control & List
+      /// Body with Segmented Control & Bookings List (matching Parent layout)
       body: GetBuilder<StudentBookingsController>(
         builder: (_) {
           return Column(
             children: [
               10.height,
 
-              /// Segmented Filter Tabs: Upcoming (3), History (3), Cancelled (1)
+              /// Segmented Filter Tabs: Upcoming, History, Cancelled
               _buildSegmentedTabs(controller),
 
               8.height,
@@ -74,14 +74,14 @@ class StudentBookingsScreen extends StatelessWidget {
         },
       ),
 
-      /// Floating Action Button to Book a Ride
+      /// Floating Action Button
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Get.toNamed(AppRoutes.studentBookRide),
         backgroundColor: const Color(0xFF1B2B68),
         elevation: 3,
         icon: const Icon(Icons.add_rounded, color: Colors.white),
         label: const CommonText(
-          text: 'Book Campus Ride',
+          text: 'Add Booking',
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: Colors.white,
@@ -90,6 +90,7 @@ class StudentBookingsScreen extends StatelessWidget {
     );
   }
 
+  /// Segmented Control with capsule background
   Widget _buildSegmentedTabs(StudentBookingsController controller) {
     final tabs = [
       'Upcoming (${controller.upcomingBookings.length})',
@@ -132,7 +133,7 @@ class StudentBookingsScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 child: CommonText(
                   text: tabs[index],
-                  fontSize: 12.5,
+                  fontSize: 13,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected
                       ? const Color(0xFF0F172A)
@@ -146,59 +147,134 @@ class StudentBookingsScreen extends StatelessWidget {
     );
   }
 
+  /// Tab Content Switcher
   Widget _buildTabContent(StudentBookingsController controller) {
-    List<StudentBookingItem> list;
-    if (controller.selectedTabIndex == 0) {
-      list = controller.upcomingBookings;
-    } else if (controller.selectedTabIndex == 1) {
-      list = controller.historyBookings;
-    } else {
-      list = controller.cancelledBookings;
+    switch (controller.selectedTabIndex) {
+      case 0:
+        return _buildUpcomingTab(controller);
+      case 1:
+        return _buildHistoryTab(controller);
+      case 2:
+        return _buildCancelledTab(controller);
+      default:
+        return _buildUpcomingTab(controller);
     }
+  }
 
-    if (list.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.calendar_today_rounded,
-              size: 44.sp,
-              color: const Color(0xFFCBD5E1),
+  /// Upcoming Tab with 2 Sections (Active Trip Right Now + Scheduled Commutes)
+  Widget _buildUpcomingTab(StudentBookingsController controller) {
+    final active = controller.activeTrips;
+    final scheduled = controller.scheduledCommutes;
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: EdgeInsets.only(bottom: 84.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// 1. Section Header: Active Trip Right Now
+          Padding(
+            padding:
+                EdgeInsets.only(left: 20.w, right: 20.w, top: 14.h, bottom: 8.h),
+            child: Row(
+              children: [
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF10B981),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                8.width,
+                CommonText(
+                  text: 'ACTIVE TRIP RIGHT NOW (${active.length})',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF334155),
+                ),
+              ],
             ),
-            12.height,
-            const CommonText(
-              text: 'No rides found',
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
+          ),
+
+          /// Active Trip Cards
+          ...active.map(
+            (b) => StudentBookingCard(
+              booking: b,
+              onTap: () => Get.toNamed(AppRoutes.studentRideDetails),
+              onTrack: () => Get.toNamed(AppRoutes.guardianLiveTrack),
             ),
-            4.height,
-            const CommonText(
-              text: 'Your campus commute bookings will appear here.',
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF64748B),
+          ),
+
+          14.height,
+
+          /// 2. Section Header: Scheduled Commutes
+          Padding(
+            padding:
+                EdgeInsets.only(left: 20.w, right: 20.w, top: 6.h, bottom: 8.h),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_month_outlined,
+                  size: 15.sp,
+                  color: const Color(0xFF64748B),
+                ),
+                8.width,
+                CommonText(
+                  text: 'SCHEDULED COMMUTES (${scheduled.length})',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF334155),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    }
+          ),
+
+          /// Scheduled Commutes Cards
+          ...scheduled.map(
+            (b) => StudentBookingCard(
+              booking: b,
+              onTap: () => Get.toNamed(AppRoutes.studentRideDetails),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// History Tab
+  Widget _buildHistoryTab(StudentBookingsController controller) {
+    final list = controller.historyBookings;
 
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(top: 4.h, bottom: 80.h),
+      padding: EdgeInsets.only(top: 8.h, bottom: 84.h),
       itemCount: list.length,
       itemBuilder: (context, index) {
-        final booking = list[index];
         return StudentBookingCard(
-          booking: booking,
-          onCancel: controller.selectedTabIndex == 0
-              ? () => controller.cancelBooking(booking.id)
-              : null,
+          booking: list[index],
+          onTap: () => Get.toNamed(AppRoutes.studentRideDetails),
+          onBookAgain: () => Get.toNamed(AppRoutes.studentBookRide),
+        );
+      },
+    );
+  }
+
+  /// Cancelled Tab
+  Widget _buildCancelledTab(StudentBookingsController controller) {
+    final list = controller.cancelledBookings;
+
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: EdgeInsets.only(top: 8.h, bottom: 84.h),
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        return StudentBookingCard(
+          booking: list[index],
+          onTap: () => Get.toNamed(AppRoutes.studentRideDetails),
+          onBookAgain: () => Get.toNamed(AppRoutes.studentBookRide),
         );
       },
     );
   }
 }
-

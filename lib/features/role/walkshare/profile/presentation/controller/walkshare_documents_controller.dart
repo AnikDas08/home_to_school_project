@@ -63,20 +63,11 @@ class WalkshareDocumentsController extends GetxController {
       WalkshareDocumentModel(
         id: '2',
         title: 'Proof of address',
-        subtitle: 'Current Utility Bill',
+        subtitle: 'Current Utility Bill / Property tax / tenant agreement',
         icon: Icons.home_outlined,
         isTwoSided: false,
         status: 'In review',
         frontFile: verificationCtrl?.proofOfAddressPhoto,
-      ),
-      WalkshareDocumentModel(
-        id: '3',
-        title: 'Property tax or tenant agreement',
-        subtitle: 'Latest information',
-        icon: Icons.receipt_long_outlined,
-        isTwoSided: false,
-        status: 'In review',
-        frontFile: verificationCtrl?.propertyAgreementPhoto,
       ),
     ];
   }

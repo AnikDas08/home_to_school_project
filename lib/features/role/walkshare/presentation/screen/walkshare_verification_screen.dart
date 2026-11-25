@@ -122,33 +122,13 @@ class WalkshareVerificationScreen extends StatelessWidget {
                         _buildCardHeader(
                           icon: Icons.home_outlined,
                           title: 'Proof of address',
-                          subtitle: 'Current Utility Bill',
+                          subtitle:
+                              'Current Utility Bill / Property tax / tenant agreement',
                         ),
                         14.height,
                         _buildDocumentUploadBox(
                           fileName: controller.proofOfAddressFileName,
                           onTap: controller.pickProofOfAddress,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  16.height,
-
-                  /// 4. Card 3: Property Tax or Tenant Agreement
-                  _buildCardContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildCardHeader(
-                          icon: Icons.receipt_long_outlined,
-                          title: 'Property tax or tenant agreement',
-                          subtitle: 'Latest information',
-                        ),
-                        14.height,
-                        _buildDocumentUploadBox(
-                          fileName: controller.propertyAgreementFileName,
-                          onTap: controller.pickPropertyAgreement,
                         ),
                       ],
                     ),
@@ -269,7 +249,7 @@ class WalkshareVerificationScreen extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: const Color(0xFF64748B),
                 ),
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
